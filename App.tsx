@@ -62,6 +62,11 @@ const App: React.FC = () => {
     deadlines: clients.filter(c => new Date(c.deadline) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).length
   }), [leads, savedLeads, clients, totalRevenue]);
 
+  const requireToken = () => {
+    if (!token) throw new Error('Not authenticated');
+    return token;
+  };
+
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(''), 5000);
@@ -124,7 +129,9 @@ const App: React.FC = () => {
       setSavedLeads(prev => [...prev, updated]);
       setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to save lead.');
+      const message = error instanceof Error ? error.message : 'Failed to save lead';
+      console.error('Select lead error:', error);
+      setErrorMessage(message);
     }
   };
 
@@ -133,30 +140,63 @@ const App: React.FC = () => {
       await leadsApi.remove(leadId, requireToken());
       if (from === 'leads') setLeads(prev => prev.filter(l => l.id !== leadId));
       else setSavedLeads(prev => prev.filter(l => l.id !== leadId));
+      setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to delete lead.');
+      const message = error instanceof Error ? error.message : 'Failed to delete lead';
+      console.error('Delete lead error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  const deleteCustomer = async (customerId: string) => {
+    try {
+      await customersApi.remove(customerId, requireToken());
+      setCustomers(prev => prev.filter(c => c.id !== customerId));
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete customer';
+      console.error('Delete customer error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  const deleteClient = async (clientId: string) => {
+    try {
+      await clientsApi.remove(clientId, requireToken());
+      setClients(prev => prev.filter(c => c.id !== clientId));
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete client';
+      console.error('Delete client error:', error);
+      setErrorMessage(message);
     }
   };
 
   const addLead = async (payload: { businessName: string; contact: string; comment: string }) => {
     try {
-      const created = await leadsApi.create({ ...payload, status: 'new' }, requireToken());
+      const token = requireToken();
+      const created = await leadsApi.create({ ...payload, status: 'new' }, token);
       setLeads(prev => [created, ...prev]);
       setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to add lead.');
+      const message = error instanceof Error ? error.message : 'Failed to add lead';
+      console.error('Add lead error:', error);
+      setErrorMessage(message);
     }
   };
 
   const importLeads = async (payloads: Array<{ businessName: string; contact: string; comment: string }>) => {
     try {
+      const token = requireToken();
       const created = await Promise.all(payloads.map((payload) =>
-        leadsApi.create({ ...payload, status: 'new' }, requireToken())
+        leadsApi.create({ ...payload, status: 'new' }, token)
       ));
       setLeads(prev => [...created, ...prev]);
       setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to import leads.');
+      const message = error instanceof Error ? error.message : 'Failed to import leads';
+      console.error('Import leads error:', error);
+      setErrorMessage(message);
     }
   };
 
@@ -170,13 +210,17 @@ const App: React.FC = () => {
       } else {
         setLeads(prev => prev.map(l => l.id === id ? updated : l));
       }
+      setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to update lead comment.');
+      const message = error instanceof Error ? error.message : 'Failed to update lead comment';
+      console.error('Update lead comment error:', error);
+      setErrorMessage(message);
     }
   };
 
   const convertToClient = async (lead: Lead) => {
     try {
+      const token = requireToken();
       const newClient: Client = {
         id: uuidv4(),
         businessName: lead.businessName,
@@ -188,13 +232,15 @@ const App: React.FC = () => {
         paymentCollected: 0,
         isCompleted: false
       };
-      await leadsApi.remove(lead.id, requireToken());
-      const createdClient = await clientsApi.create(newClient, requireToken());
+      await leadsApi.remove(lead.id, token);
+      const createdClient = await clientsApi.create(newClient, token);
       setSavedLeads(prev => prev.filter(l => l.id !== lead.id));
       setClients(prev => [...prev, createdClient]);
       setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to convert lead to client.');
+      const message = error instanceof Error ? error.message : 'Failed to convert lead to client';
+      console.error('Convert lead error:', error);
+      setErrorMessage(message);
     }
   };
 
@@ -209,25 +255,30 @@ const App: React.FC = () => {
       setClients(prev => prev.map(c => c.id === clientId ? updated : c));
       setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to update payment.');
+      const message = error instanceof Error ? error.message : 'Failed to update payment';
+      console.error('Update payment error:', error);
+      setErrorMessage(message);
     }
   };
 
   const markClientCompleted = async (clientId: string) => {
     try {
+      const token = requireToken();
       const client = clients.find(c => c.id === clientId);
       if (!client) return;
-      await clientsApi.remove(clientId, requireToken());
+      await clientsApi.remove(clientId, token);
       const customer = await customersApi.create({
         businessName: client.businessName,
         completedDate: new Date().toISOString().split('T')[0],
         totalPaid: client.paymentCollected
-      }, requireToken());
+      }, token);
       setClients(prev => prev.filter(c => c.id !== clientId));
       setCustomers(prev => [customer, ...prev]);
       setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to complete client.');
+      const message = error instanceof Error ? error.message : 'Failed to complete client';
+      console.error('Mark client completed error:', error);
+      setErrorMessage(message);
     }
   };
 
@@ -347,6 +398,8 @@ const App: React.FC = () => {
       case 'dashboard': return (
         <Dashboard
           stats={stats}
+          clients={clients}
+          customers={customers}
           onCreateLead={() => {
             setCurrentPage('leads');
             setShowAddLead(true);
@@ -354,6 +407,7 @@ const App: React.FC = () => {
           onSaveAllLeads={saveAllLeads}
           onGenerateReport={downloadReport}
           onSyncContacts={refreshData}
+          onDeleteCustomer={deleteCustomer}
         />
       );
       case 'leads': return (
@@ -380,6 +434,7 @@ const App: React.FC = () => {
           clients={clients.filter(c => (c.businessName || '').toLowerCase().includes(searchQuery.toLowerCase()))}
           onUpdatePayment={updatePayment}
           onMarkCompleted={markClientCompleted}
+          onDeleteClient={deleteClient}
         />
       );
       case 'goals': return goal ? (
@@ -406,11 +461,14 @@ const App: React.FC = () => {
         <CustomersPage 
           customers={customers.filter(c => (c.businessName || '').toLowerCase().includes(searchQuery.toLowerCase()))}
           onDownloadReport={downloadCustomerReport}
+          onDeleteCustomer={deleteCustomer}
         />
       );
       default: return (
         <Dashboard
           stats={stats}
+          clients={clients}
+          customers={customers}
           onCreateLead={() => {
             setCurrentPage('leads');
             setShowAddLead(true);
@@ -418,6 +476,7 @@ const App: React.FC = () => {
           onSaveAllLeads={saveAllLeads}
           onGenerateReport={downloadReport}
           onSyncContacts={refreshData}
+          onDeleteCustomer={deleteCustomer}
         />
       );
     }

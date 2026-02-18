@@ -14,7 +14,11 @@ def list_leads(db: Session = Depends(get_db)):
 
 @router.post("", response_model=schemas.LeadOut)
 def create_lead(payload: schemas.LeadCreate, db: Session = Depends(get_db)):
-    return crud.create_lead(db, payload)
+    try:
+        return crud.create_lead(db, payload)
+    except Exception as e:
+        print(f"Error creating lead: {e}")
+        raise HTTPException(status_code=400, detail=f"Failed to create lead: {str(e)}")
 
 
 @router.patch("/{lead_id}", response_model=schemas.LeadOut)

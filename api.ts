@@ -89,6 +89,7 @@ const request = async <T>(path: string, options: RequestInit = {}, token?: AuthT
 
   if (!response.ok) {
     const message = await response.text();
+    console.error(`API Error ${response.status}:`, message);
     throw new Error(message || `Request failed: ${response.status}`);
   }
 
@@ -124,10 +125,15 @@ export const authApi = {
 
 export const leadsApi = {
   list: async (token: AuthToken) => (await request<any[]>('/leads', {}, token)).map(fromApiLead),
-  create: async (lead: Partial<Lead>, token: AuthToken) => fromApiLead(await request('/leads', {
-    method: 'POST',
-    body: JSON.stringify(toApiLead(lead))
-  }, token)),
+  create: async (lead: Partial<Lead>, token: AuthToken) => {
+    console.log('Creating lead:', lead);
+    const response = fromApiLead(await request('/leads', {
+      method: 'POST',
+      body: JSON.stringify(toApiLead(lead))
+    }, token));
+    console.log('Created lead:', response);
+    return response;
+  },
   update: async (id: string, lead: Partial<Lead>, token: AuthToken) => fromApiLead(await request(`/leads/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(toApiLead(lead))

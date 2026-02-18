@@ -1,14 +1,15 @@
 
 import React from 'react';
-import { CheckCircle, ShieldCheck, Download, History } from 'lucide-react';
+import { CheckCircle, ShieldCheck, Download, History, Trash2 } from 'lucide-react';
 import { Customer } from '../types';
 
 interface CustomersPageProps {
   customers: Customer[];
   onDownloadReport: (customer: Customer) => void;
+  onDeleteCustomer?: (id: string) => void;
 }
 
-const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadReport }) => {
+const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadReport, onDeleteCustomer }) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -26,7 +27,7 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
                   <th className="px-6 py-4 font-semibold">Date Completed</th>
                   <th className="px-6 py-4 font-semibold">Total Revenue</th>
                   <th className="px-6 py-4 font-semibold text-center">Status</th>
-                  <th className="px-6 py-4 font-semibold text-center">Report</th>
+                  <th className="px-6 py-4 font-semibold text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
@@ -52,12 +53,22 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <button
-                        onClick={() => onDownloadReport(customer)}
-                        className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-                      >
-                        <Download size={18} />
-                      </button>
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => onDownloadReport(customer)}
+                          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                          title="Download report"
+                        >
+                          <Download size={18} />
+                        </button>
+                        <button
+                          onClick={() => onDeleteCustomer?.(customer.id)}
+                          className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
+                          title="Delete customer"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
