@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Target, Trophy, Calendar, TrendingUp, Edit2, Check, Info } from 'lucide-react';
 import { Goal } from '../types';
 
@@ -15,10 +15,24 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, previousGoa
   const [tempTarget, setTempTarget] = useState(goal.targetAmount.toString());
   const [tempDeadline, setTempDeadline] = useState(goal.deadline);
 
+  useEffect(() => {
+    setTempTarget(goal.targetAmount.toString());
+    setTempDeadline(goal.deadline);
+  }, [goal.targetAmount, goal.deadline]);
+
   const progress = Math.min(100, (currentRevenue / goal.targetAmount) * 100);
 
   const handleSave = () => {
-    onUpdateGoal(parseFloat(tempTarget) || 0, tempDeadline);
+    const target = parseFloat(tempTarget);
+    if (isNaN(target) || target <= 0) {
+      alert('Please enter a valid target amount');
+      return;
+    }
+    if (!tempDeadline) {
+      alert('Please select a deadline');
+      return;
+    }
+    onUpdateGoal(target, tempDeadline);
     setIsEditing(false);
   };
 

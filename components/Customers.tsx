@@ -5,9 +5,10 @@ import { Customer } from '../types';
 
 interface CustomersPageProps {
   customers: Customer[];
+  onDownloadReport: (customer: Customer) => void;
 }
 
-const CustomersPage: React.FC<CustomersPageProps> = ({ customers }) => {
+const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadReport }) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -51,7 +52,10 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers }) => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                      <button
+                        onClick={() => onDownloadReport(customer)}
+                        className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                      >
                         <Download size={18} />
                       </button>
                     </td>

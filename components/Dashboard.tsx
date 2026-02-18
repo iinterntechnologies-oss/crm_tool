@@ -12,9 +12,13 @@ import { Stats } from '../types';
 
 interface DashboardProps {
   stats: Stats;
+  onCreateLead: () => void;
+  onSaveAllLeads: () => void;
+  onGenerateReport: () => void;
+  onSyncContacts: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
+const Dashboard: React.FC<DashboardProps> = ({ stats, onCreateLead, onSaveAllLeads, onGenerateReport, onSyncContacts }) => {
   const cards = [
     { title: 'Total Leads', value: stats.totalLeads, icon: Users, color: 'text-blue-400', bg: 'bg-blue-400/10' },
     { title: 'Active Projects', value: stats.activeProjects, icon: Briefcase, color: 'text-cyan-400', bg: 'bg-cyan-400/10' },
@@ -90,13 +94,28 @@ const Dashboard: React.FC<DashboardProps> = ({ stats }) => {
             <h3 className="font-semibold text-base md:text-lg">Quick Actions</h3>
           </div>
           <div className="p-5 md:p-6 space-y-3 md:space-y-4">
-            <button className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-sm md:text-base transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98]">
+            <button
+              onClick={onCreateLead}
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-sm md:text-base transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98]"
+            >
               Create New Lead
             </button>
-            <button className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98]">
+            <button
+              onClick={onSaveAllLeads}
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold text-sm md:text-base transition-all shadow-lg shadow-emerald-900/20 active:scale-[0.98]"
+            >
+              Save All Leads
+            </button>
+            <button
+              onClick={onGenerateReport}
+              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98]"
+            >
               Generate Report
             </button>
-            <button className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98]">
+            <button
+              onClick={onSyncContacts}
+              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98]"
+            >
               Sync Contacts
             </button>
           </div>

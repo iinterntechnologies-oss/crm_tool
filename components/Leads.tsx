@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FileSpreadsheet, Trash2, CheckCircle2, MessageSquare, Plus, Users } from 'lucide-react';
 import { Lead } from '../types';
 
@@ -8,19 +8,78 @@ interface LeadsPageProps {
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
   onUpdateComment: (id: string, text: string) => void;
+  onAddLead: (lead: { businessName: string; contact: string; comment: string }) => void;
+  onImportLeads: (leads: Array<{ businessName: string; contact: string; comment: string }>) => void;
+  showAddLead: boolean;
+  onToggleAddLead: (open: boolean) => void;
 }
 
-const LeadsPage: React.FC<LeadsPageProps> = ({ leads, onSelect, onDelete, onUpdateComment }) => {
+const LeadsPage: React.FC<LeadsPageProps> = ({
+  leads,
+  onSelect,
+  onDelete,
+  onUpdateComment,
+  onAddLead,
+  onImportLeads,
+  showAddLead,
+  onToggleAddLead
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [formData, setFormData] = useState({ businessName: '', contact: '', comment: '' });
+
+  useEffect(() => {
+    if (showAddLead) {
+      setIsAdding(true);
+    }
+  }, [showAddLead]);
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.length) {
-      alert(`Successfully uploaded: ${e.target.files[0].name} (Mocked data added)`);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+      alert('Please upload a .csv file with columns: businessName, contact, comment');
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = String(reader.result || '');
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) return;
+
+      const rows = lines.slice(1).map((line) => line.split(',').map((cell) => cell.trim()));
+      const parsed = rows
+        .filter((row) => row[0] && row[1])
+        .map((row) => ({
+          businessName: row[0],
+          contact: row[1],
+          comment: row[2] || ''
+        }));
+
+      if (parsed.length) {
+        onImportLeads(parsed);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleAddLeadSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!formData.businessName.trim() || !formData.contact.trim()) return;
+    onAddLead({
+      businessName: formData.businessName.trim(),
+      contact: formData.contact.trim(),
+      comment: formData.comment.trim()
+    });
+    setFormData({ businessName: '', contact: '', comment: '' });
+    setIsAdding(false);
+    onToggleAddLead(false);
   };
 
   return (
@@ -45,20 +104,72 @@ const LeadsPage: React.FC<LeadsPageProps> = ({ leads, onSelect, onDelete, onUpda
             <FileSpreadsheet size={16} className="text-emerald-400" />
             <span className="text-xs md:text-sm font-semibold">Excel</span>
           </button>
-          <button className="flex-1 md:flex-none flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98] shrink-0">
+          <button
+            onClick={() => {
+              setIsAdding(true);
+              onToggleAddLead(true);
+            }}
+            className="flex-1 md:flex-none flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98] shrink-0"
+          >
             <Plus size={16} />
             <span className="text-xs md:text-sm font-semibold whitespace-nowrap">Add Lead</span>
           </button>
         </div>
       </div>
 
+      {isAdding && (
+        <form onSubmit={handleAddLeadSubmit} className="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input
+              type="text"
+              placeholder="Business name"
+              className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100"
+              value={formData.businessName}
+              onChange={(e) => setFormData((prev) => ({ ...prev, businessName: e.target.value }))}
+            />
+            <input
+              type="text"
+              placeholder="Contact number"
+              className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100"
+              value={formData.contact}
+              onChange={(e) => setFormData((prev) => ({ ...prev, contact: e.target.value }))}
+            />
+            <input
+              type="text"
+              placeholder="Quick comment"
+              className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100"
+              value={formData.comment}
+              onChange={(e) => setFormData((prev) => ({ ...prev, comment: e.target.value }))}
+            />
+          </div>
+          <div className="flex items-center justify-end space-x-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIsAdding(false);
+                onToggleAddLead(false);
+              }}
+              className="bg-slate-800 hover:bg-slate-700 text-slate-100 px-4 py-2 rounded-lg text-sm font-semibold"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold"
+            >
+              Save Lead
+            </button>
+          </div>
+        </form>
+      )}
+
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
         {leads.length > 0 ? (
           <div className="overflow-x-auto scrollbar-hide relative group">
             {/* Visual indicator for horizontal scroll on mobile */}
-            <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-950/50 to-transparent pointer-events-none" />
+            <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-slate-950/50 to-transparent pointer-events-none" />
             
-            <table className="w-full text-left min-w-[700px]">
+            <table className="w-full text-left min-w-175">
               <thead>
                 <tr className="bg-slate-800/50 text-slate-400 text-[10px] md:text-xs uppercase tracking-wider">
                   <th className="px-6 py-4 font-semibold">Business Name</th>
@@ -78,7 +189,7 @@ const LeadsPage: React.FC<LeadsPageProps> = ({ leads, onSelect, onDelete, onUpda
                       {lead.contact}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 focus-within:border-blue-500/50 transition-all min-w-[150px]">
+                      <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 focus-within:border-blue-500/50 transition-all min-w-37.5">
                         <MessageSquare size={14} className="text-slate-500 mr-2 shrink-0" />
                         <input 
                           type="text" 
