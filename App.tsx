@@ -45,7 +45,7 @@ const App: React.FC = () => {
   const [previousGoals, setPreviousGoals] = useState<Goal[]>([]);
   const [showCelebration, setShowCelebration] = useState(false);
 
-  const demoEmail = import.meta.env.VITE_DEMO_EMAIL || 'demo@designflow.app';
+  const demoEmail = import.meta.env.VITE_DEMO_EMAIL || 'demo@pulse.app';
   const demoPassword = import.meta.env.VITE_DEMO_PASSWORD || 'demo1234';
 
   // Derived Values

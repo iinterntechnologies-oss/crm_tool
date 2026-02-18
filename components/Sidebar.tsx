@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
         }`}
       >
         <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800 bg-slate-950/20">
-          {isOpen && <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">DesignFlow</h1>}
+          {isOpen && <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Pulse</h1>}
           <button 
             onClick={onToggle}
             className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"

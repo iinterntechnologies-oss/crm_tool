@@ -4,7 +4,7 @@ from .settings import settings
 from .db import Base, engine
 from .routers import auth, clients, customers, goals, leads, stats
 
-app = FastAPI(title="DesignFlow CRM API")
+app = FastAPI(title="Pulse CRM API")
 
 app.add_middleware(
     CORSMiddleware,

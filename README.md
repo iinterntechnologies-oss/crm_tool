@@ -1,6 +1,6 @@
-# DesignFlow CRM
+# Pulse CRM
 
-DesignFlow CRM is a React + Vite frontend with a FastAPI backend. The UI manages leads, saved leads, clients, goals, and customers. The backend persists data in Postgres (Supabase compatible) and exposes REST endpoints secured by JWT.
+Pulse CRM is a React + Vite frontend with a FastAPI backend. The UI manages leads, saved leads, clients, goals, and customers. The backend persists data in Postgres (Supabase compatible) and exposes REST endpoints secured by JWT.
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ DesignFlow CRM is a React + Vite frontend with a FastAPI backend. The UI manages
    `npm install`
 2. (Optional) Create a .env.local for frontend settings:
    - `VITE_API_BASE_URL=http://localhost:8000`
-   - `VITE_DEMO_EMAIL=demo@designflow.local`
+   - `VITE_DEMO_EMAIL=demo@pulse.local`
    - `VITE_DEMO_PASSWORD=demo1234`
 3. Run the app:
    `npm run dev`
