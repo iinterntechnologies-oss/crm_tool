@@ -110,6 +110,7 @@ class CustomerOut(CustomerBase):
 
 
 class GoalBase(BaseModel):
+    title: str = "Revenue Goal"
     target_amount: float
     deadline: date
     date_started: date
@@ -122,6 +123,7 @@ class GoalCreate(GoalBase):
 
 
 class GoalUpdate(BaseModel):
+    title: str | None = None
     target_amount: float | None = None
     deadline: date | None = None
     date_started: date | None = None

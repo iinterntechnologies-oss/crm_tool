@@ -1,15 +1,43 @@
 
-import React from 'react';
-import { CheckCircle, ShieldCheck, Download, History, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle, ShieldCheck, Download, History, Trash2, Edit2, Save, X } from 'lucide-react';
 import { Customer } from '../types';
 
 interface CustomersPageProps {
   customers: Customer[];
   onDownloadReport: (customer: Customer) => void;
   onDeleteCustomer?: (id: string) => void;
+  onUpdateCustomer?: (id: string, updates: Partial<Customer>) => void;
 }
 
-const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadReport, onDeleteCustomer }) => {
+const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadReport, onDeleteCustomer, onUpdateCustomer }) => {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState<{ businessName: string; completedDate: string; totalPaid: string } | null>(null);
+
+  const startEdit = (customer: Customer) => {
+    setEditingId(customer.id);
+    setDraft({
+      businessName: customer.businessName,
+      completedDate: customer.completedDate,
+      totalPaid: customer.totalPaid.toString()
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setDraft(null);
+  };
+
+  const saveEdit = (customerId: string) => {
+    if (!draft) return;
+    const totalPaid = parseFloat(draft.totalPaid);
+    onUpdateCustomer?.(customerId, {
+      businessName: draft.businessName,
+      completedDate: draft.completedDate,
+      totalPaid: Number.isNaN(totalPaid) ? 0 : totalPaid
+    });
+    cancelEdit();
+  };
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -38,14 +66,41 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
                         <div className="h-8 w-8 bg-blue-500/10 rounded-full flex items-center justify-center border border-blue-500/20">
                           <ShieldCheck size={16} className="text-blue-400" />
                         </div>
-                        <span className="font-semibold">{customer.businessName}</span>
+                        {editingId === customer.id ? (
+                          <input
+                            type="text"
+                            className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100"
+                            value={draft?.businessName || ''}
+                            onChange={(e) => setDraft((prev) => prev ? { ...prev, businessName: e.target.value } : prev)}
+                          />
+                        ) : (
+                          <span className="font-semibold">{customer.businessName}</span>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-400">
-                      {customer.completedDate}
+                      {editingId === customer.id ? (
+                        <input
+                          type="date"
+                          className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100"
+                          value={draft?.completedDate || ''}
+                          onChange={(e) => setDraft((prev) => prev ? { ...prev, completedDate: e.target.value } : prev)}
+                        />
+                      ) : (
+                        customer.completedDate
+                      )}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="font-bold text-emerald-400">₹{customer.totalPaid.toLocaleString()}</div>
+                      {editingId === customer.id ? (
+                        <input
+                          type="number"
+                          className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100 w-28"
+                          value={draft?.totalPaid || ''}
+                          onChange={(e) => setDraft((prev) => prev ? { ...prev, totalPaid: e.target.value } : prev)}
+                        />
+                      ) : (
+                        <div className="font-bold text-emerald-400">₹{customer.totalPaid.toLocaleString()}</div>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-bold uppercase tracking-wider">
@@ -54,6 +109,32 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-center gap-2">
+                        {editingId === customer.id ? (
+                          <>
+                            <button
+                              onClick={() => saveEdit(customer.id)}
+                              className="p-2 text-emerald-400 hover:text-emerald-300 hover:bg-slate-800 rounded-lg transition-colors"
+                              title="Save"
+                            >
+                              <Save size={18} />
+                            </button>
+                            <button
+                              onClick={cancelEdit}
+                              className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors"
+                              title="Cancel"
+                            >
+                              <X size={18} />
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => startEdit(customer)}
+                            className="p-2 text-slate-400 hover:text-blue-400 hover:bg-slate-800 rounded-lg transition-colors"
+                            title="Edit customer"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                        )}
                         <button
                           onClick={() => onDownloadReport(customer)}
                           className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"

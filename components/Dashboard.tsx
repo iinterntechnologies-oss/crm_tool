@@ -30,6 +30,42 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
     { title: 'Deadlines (7d)', value: stats.deadlines, icon: Clock, color: 'text-amber-400', bg: 'bg-amber-400/10' },
   ];
 
+  const chartData = clients
+    .slice()
+    .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+    .slice(0, 8)
+    .map((client) => {
+      const totalDays = Math.max(
+        1,
+        Math.ceil((new Date(client.deadline).getTime() - new Date(client.onboarding).getTime()) / (1000 * 60 * 60 * 24))
+      );
+      const daysStarted = Math.max(
+        0,
+        Math.ceil((Date.now() - new Date(client.onboarding).getTime()) / (1000 * 60 * 60 * 24))
+      );
+      const progress = Math.max(0, Math.min(100, (daysStarted / totalDays) * 100));
+      const daysUntilDeadline = Math.ceil((new Date(client.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      return { id: client.id, name: client.businessName, progress, daysUntilDeadline };
+    });
+
+  const chartWidth = 100;
+  const chartHeight = 36;
+  const xStep = chartData.length > 1 ? chartWidth / (chartData.length - 1) : 0;
+  const chartPoints = chartData
+    .map((point, index) => {
+      const x = index * xStep;
+      const y = chartHeight - (point.progress / 100) * chartHeight;
+      return `${x.toFixed(2)},${y.toFixed(2)}`;
+    })
+    .join(' ');
+  const averageProgress = chartData.length
+    ? Math.round(chartData.reduce((acc, point) => acc + point.progress, 0) / chartData.length)
+    : 0;
+  const nextDeadline = chartData
+    .map((point) => point.daysUntilDeadline)
+    .filter((value) => value >= 0)
+    .sort((a, b) => a - b)[0];
+
   return (
     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -66,38 +102,47 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
             </button>
           </div>
           <div className="p-4 md:p-6">
-            {clients.length > 0 ? (
-              <div className="space-y-3 md:space-y-4">
-                {clients.slice(0, 5).map(client => {
-                  const daysUntilDeadline = Math.ceil((new Date(client.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-                  const daysStarted = Math.ceil((Date.now() - new Date(client.onboarding).getTime()) / (1000 * 60 * 60 * 24));
-                  const totalDays = Math.ceil((new Date(client.deadline).getTime() - new Date(client.onboarding).getTime()) / (1000 * 60 * 60 * 24));
-                  const progress = Math.max(0, Math.min(100, (daysStarted / totalDays) * 100));
-                  return (
-                    <div key={client.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-950/50 border border-slate-800/50 rounded-xl gap-4">
-                      <div className="flex items-center space-x-4 flex-1">
-                        <div className="h-9 w-9 md:h-10 md:w-10 bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
-                          <Briefcase size={18} className="text-slate-400" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium text-sm md:text-base truncate">{client.businessName}</p>
-                          <p className="text-[10px] md:text-xs text-slate-500">{client.delivery}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between sm:justify-end space-x-6">
-                        <div className="text-left sm:text-right shrink-0">
-                          <p className="text-[10px] md:text-xs text-slate-500 uppercase font-bold tracking-tighter">Due in</p>
-                          <p className={`text-xs md:text-sm font-semibold ${daysUntilDeadline < 0 ? 'text-red-400' : 'text-slate-100'}`}>
-                            {daysUntilDeadline > 0 ? `${daysUntilDeadline}d` : 'Overdue'}
-                          </p>
-                        </div>
-                        <div className="w-20 md:w-24 bg-slate-800 h-1.5 md:h-2 rounded-full overflow-hidden shrink-0">
-                          <div className={`h-full transition-all ${progress >= 100 ? 'bg-emerald-500' : 'bg-blue-500'}`} style={{ width: `${Math.min(100, progress)}%` }} />
-                        </div>
-                      </div>
+            {chartData.length > 0 ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-[10px] md:text-xs text-slate-500 uppercase tracking-widest">
+                  <span>Progress Trend</span>
+                  <span>
+                    {averageProgress}% avg • {nextDeadline !== undefined ? `Next due ${nextDeadline}d` : 'No upcoming deadlines'}
+                  </span>
+                </div>
+                <div className="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4">
+                  <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-32" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="pulseLine" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#22d3ee" />
+                        <stop offset="100%" stopColor="#3b82f6" />
+                      </linearGradient>
+                    </defs>
+                    <polyline
+                      fill="none"
+                      stroke="url(#pulseLine)"
+                      strokeWidth="2"
+                      strokeLinejoin="round"
+                      strokeLinecap="round"
+                      points={chartPoints}
+                    />
+                    {chartData.map((point, index) => {
+                      const x = index * xStep;
+                      const y = chartHeight - (point.progress / 100) * chartHeight;
+                      return <circle key={point.id} cx={x} cy={y} r={1.6} fill="#38bdf8" />;
+                    })}
+                  </svg>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] md:text-xs">
+                  {chartData.map((point) => (
+                    <div key={point.id} className="truncate text-slate-400">
+                      <span className="text-slate-200">{point.name}</span>
+                      <span className={`ml-2 ${point.daysUntilDeadline < 0 ? 'text-red-400' : 'text-slate-500'}`}>
+                        {point.daysUntilDeadline >= 0 ? `${point.daysUntilDeadline}d` : 'Overdue'}
+                      </span>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="text-center text-slate-400 py-8">

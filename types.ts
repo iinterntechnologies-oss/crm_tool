@@ -30,6 +30,7 @@ export interface Customer {
 
 export interface Goal {
   id: string;
+  title: string;
   targetAmount: number;
   deadline: string;
   dateStarted: string;

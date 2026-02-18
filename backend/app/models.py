@@ -55,6 +55,7 @@ class Goal(Base):
     __tablename__ = "goals"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    title: Mapped[str] = mapped_column(String(255), default="")
     target_amount: Mapped[float] = mapped_column(Float)
     deadline: Mapped[date] = mapped_column(Date)
     date_started: Mapped[date] = mapped_column(Date)

@@ -56,6 +56,7 @@ const fromApiCustomer = (customer: any): Customer => ({
 });
 
 const toApiGoal = (goal: Partial<Goal>) => ({
+  title: goal.title ?? 'Revenue Goal',
   target_amount: goal.targetAmount,
   deadline: goal.deadline,
   date_started: goal.dateStarted,
@@ -65,6 +66,7 @@ const toApiGoal = (goal: Partial<Goal>) => ({
 
 const fromApiGoal = (goal: any): Goal => ({
   id: goal.id,
+  title: goal.title ?? 'Revenue Goal',
   targetAmount: goal.target_amount,
   deadline: goal.deadline,
   dateStarted: goal.date_started,
@@ -150,6 +152,10 @@ export const clientsApi = {
   update: async (id: string, client: Partial<Client>, token: AuthToken) => fromApiClient(await request(`/clients/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(toApiClient(client))
+  }, token)),
+  updatePayment: async (id: string, paymentCollected: number, token: AuthToken) => fromApiClient(await request(`/clients/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ payment_collected: paymentCollected })
   }, token)),
   remove: (id: string, token: AuthToken) => request(`/clients/${id}`, { method: 'DELETE' }, token)
 };

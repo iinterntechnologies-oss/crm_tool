@@ -1,24 +1,28 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Target, Trophy, Calendar, TrendingUp, Edit2, Check, Info } from 'lucide-react';
+import { Target, Trophy, Calendar, TrendingUp, Edit2, Check, CheckCircle, Info } from 'lucide-react';
 import { Goal } from '../types';
 
 interface GoalsPageProps {
   goal: Goal;
   currentRevenue: number;
+  successfulClients: number;
+  successfulRevenue: number;
   previousGoals: Goal[];
-  onUpdateGoal: (target: number, deadline: string) => void;
+  onUpdateGoal: (title: string, target: number, deadline: string) => void;
 }
 
-const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, previousGoals, onUpdateGoal }) => {
+const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulClients, successfulRevenue, previousGoals, onUpdateGoal }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [tempTitle, setTempTitle] = useState(goal.title || 'Revenue Goal');
   const [tempTarget, setTempTarget] = useState(goal.targetAmount.toString());
   const [tempDeadline, setTempDeadline] = useState(goal.deadline);
 
   useEffect(() => {
+    setTempTitle(goal.title || 'Revenue Goal');
     setTempTarget(goal.targetAmount.toString());
     setTempDeadline(goal.deadline);
-  }, [goal.targetAmount, goal.deadline]);
+  }, [goal.title, goal.targetAmount, goal.deadline]);
 
   const progress = Math.min(100, (currentRevenue / goal.targetAmount) * 100);
 
@@ -32,7 +36,8 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, previousGoa
       alert('Please select a deadline');
       return;
     }
-    onUpdateGoal(target, tempDeadline);
+    const title = tempTitle.trim() || 'Revenue Goal';
+    onUpdateGoal(title, target, tempDeadline);
     setIsEditing(false);
   };
 
@@ -62,6 +67,15 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, previousGoa
                 </span>
                 {isEditing ? (
                   <div className="mt-4 flex flex-col space-y-4 max-w-md">
+                    <div className="flex flex-col">
+                      <label className="text-xs text-slate-500 mb-1 font-bold uppercase">Goal Title</label>
+                      <input 
+                        type="text"
+                        className="bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                        value={tempTitle}
+                        onChange={(e) => setTempTitle(e.target.value)}
+                      />
+                    </div>
                     <div className="flex flex-col">
                       <label className="text-xs text-slate-500 mb-1 font-bold uppercase">Target Amount (₹)</label>
                       <input 
@@ -94,9 +108,13 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, previousGoa
                   </div>
                 ) : (
                   <>
-                    <h3 className="text-4xl md:text-5xl font-black mt-4 tracking-tight">
-                      ₹{goal.targetAmount.toLocaleString()}
+                    <p className="text-slate-400 text-xs md:text-sm font-medium mt-4">Remaining</p>
+                    <h3 className="text-4xl md:text-5xl font-black tracking-tight">
+                      ₹{Math.max(0, goal.targetAmount - currentRevenue).toLocaleString()}
                     </h3>
+                    <p className="text-sm md:text-base text-slate-300 mt-3 font-semibold">
+                      {goal.title || 'Revenue Goal'}
+                    </p>
                     <button 
                       onClick={() => setIsEditing(true)}
                       className="flex items-center mt-4 text-slate-400 hover:text-blue-400 transition-colors group"
@@ -144,7 +162,11 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, previousGoa
               
               <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase tracking-widest pt-2">
                 <span>Start (₹0)</span>
-                <span>The Goal (₹{goal.targetAmount.toLocaleString()})</span>
+                <span>Progress</span>
+              </div>
+              <div className="pt-4 text-right">
+                <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Goal Total</span>
+                <div className="text-xl md:text-2xl font-black text-slate-100">₹{goal.targetAmount.toLocaleString()}</div>
               </div>
             </div>
           </div>
@@ -173,6 +195,16 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, previousGoa
                   <p className="text-lg md:text-xl font-bold">
                     {daysRemaining} Days
                   </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3 md:space-x-4">
+                <div className="h-10 w-10 md:h-12 md:w-12 bg-amber-500/10 rounded-xl md:rounded-2xl flex items-center justify-center border border-amber-500/20 shrink-0">
+                  <CheckCircle className="text-amber-400 h-5 w-5 md:h-6 md:w-6" />
+                </div>
+                <div>
+                  <p className="text-slate-400 text-[10px] md:text-xs">Successful Clients</p>
+                  <p className="text-lg md:text-xl font-bold">{successfulClients}</p>
+                  <p className="text-[10px] md:text-xs text-slate-500">₹{successfulRevenue.toLocaleString()}</p>
                 </div>
               </div>
             </div>

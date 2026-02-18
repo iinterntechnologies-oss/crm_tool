@@ -54,6 +54,11 @@ const App: React.FC = () => {
     customers.reduce((acc, c) => acc + c.totalPaid, 0),
     [clients, customers]
   );
+  const successfulRevenue = useMemo(() =>
+    customers.reduce((acc, c) => acc + c.totalPaid, 0),
+    [customers]
+  );
+  const successfulClients = customers.length;
 
   const stats = useMemo(() => ({
     totalLeads: leads.length + savedLeads.length,
@@ -160,6 +165,18 @@ const App: React.FC = () => {
     }
   };
 
+  const updateCustomer = async (customerId: string, updates: Partial<Customer>) => {
+    try {
+      const updated = await customersApi.update(customerId, updates, requireToken());
+      setCustomers(prev => prev.map(c => c.id === customerId ? updated : c));
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update customer';
+      console.error('Update customer error:', error);
+      setErrorMessage(message);
+    }
+  };
+
   const deleteClient = async (clientId: string) => {
     try {
       await clientsApi.remove(clientId, requireToken());
@@ -218,16 +235,18 @@ const App: React.FC = () => {
     }
   };
 
-  const convertToClient = async (lead: Lead) => {
+  const convertToClient = async (lead: Lead, dates?: { startDate?: string; finishDate?: string }) => {
     try {
       const token = requireToken();
+      const startDate = dates?.startDate || new Date().toISOString().split('T')[0];
+      const finishDate = dates?.finishDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       const newClient: Client = {
         id: uuidv4(),
         businessName: lead.businessName,
         businessType: 'Web Design',
         contact: lead.contact,
-        onboarding: new Date().toISOString().split('T')[0],
-        deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        onboarding: startDate,
+        deadline: finishDate,
         delivery: 'In Progress',
         paymentCollected: 0,
         isCompleted: false
@@ -239,6 +258,12 @@ const App: React.FC = () => {
       setErrorMessage('');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to convert lead to client';
+      if (message.toLowerCase().includes('lead not found')) {
+        setSavedLeads(prev => prev.filter(l => l.id !== lead.id));
+        setErrorMessage('Lead already removed. Refreshing list.');
+        refreshData();
+        return;
+      }
       console.error('Convert lead error:', error);
       setErrorMessage(message);
     }
@@ -248,14 +273,19 @@ const App: React.FC = () => {
     try {
       const client = clients.find(c => c.id === clientId);
       if (!client) return;
-      const updated = await clientsApi.update(clientId, {
-        ...client,
-        paymentCollected: client.paymentCollected + amount
-      }, requireToken());
+      const nextPayment = Number((client.paymentCollected + amount).toFixed(2));
+      setClients(prev => prev.map(c => c.id === clientId ? { ...c, paymentCollected: nextPayment } : c));
+      const updated = await clientsApi.updatePayment(clientId, nextPayment, requireToken());
       setClients(prev => prev.map(c => c.id === clientId ? updated : c));
       setErrorMessage('');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to update payment';
+      if (message.toLowerCase().includes('client not found')) {
+        setClients(prev => prev.filter(c => c.id !== clientId));
+        setErrorMessage('Client already removed. Refreshing list.');
+        refreshData();
+        return;
+      }
       console.error('Update payment error:', error);
       setErrorMessage(message);
     }
@@ -269,7 +299,7 @@ const App: React.FC = () => {
       await clientsApi.remove(clientId, token);
       const customer = await customersApi.create({
         businessName: client.businessName,
-        completedDate: new Date().toISOString().split('T')[0],
+        completedDate: client.deadline || new Date().toISOString().split('T')[0],
         totalPaid: client.paymentCollected
       }, token);
       setClients(prev => prev.filter(c => c.id !== clientId));
@@ -277,19 +307,26 @@ const App: React.FC = () => {
       setErrorMessage('');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to complete client';
+      if (message.toLowerCase().includes('client not found')) {
+        setClients(prev => prev.filter(c => c.id !== clientId));
+        setErrorMessage('Client already removed. Refreshing list.');
+        refreshData();
+        return;
+      }
       console.error('Mark client completed error:', error);
       setErrorMessage(message);
     }
   };
 
-  const updateGoal = async (target: number, deadline: string) => {
+  const updateGoal = async (title: string, target: number, deadline: string) => {
     try {
       if (currentGoalId && goal) {
-        const updated = await goalsApi.update(currentGoalId, { ...goal, targetAmount: target, deadline, isAchieved: false }, requireToken());
+        const updated = await goalsApi.update(currentGoalId, { ...goal, title, targetAmount: target, deadline, isAchieved: false }, requireToken());
         setGoal(updated);
       } else {
         const newGoal: Goal = {
           id: '',
+          title,
           targetAmount: target,
           deadline,
           dateStarted: new Date().toISOString().split('T')[0],
@@ -440,7 +477,9 @@ const App: React.FC = () => {
       case 'goals': return goal ? (
         <GoalsPage 
           goal={goal} 
-          currentRevenue={totalRevenue} 
+          currentRevenue={successfulRevenue} 
+          successfulClients={successfulClients}
+          successfulRevenue={successfulRevenue}
           previousGoals={previousGoals} 
           onUpdateGoal={updateGoal}
         />
@@ -462,6 +501,7 @@ const App: React.FC = () => {
           customers={customers.filter(c => (c.businessName || '').toLowerCase().includes(searchQuery.toLowerCase()))}
           onDownloadReport={downloadCustomerReport}
           onDeleteCustomer={deleteCustomer}
+          onUpdateCustomer={updateCustomer}
         />
       );
       default: return (

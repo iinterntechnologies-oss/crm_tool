@@ -1,15 +1,22 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Bookmark, Rocket, Trash2, Phone } from 'lucide-react';
 import { Lead } from '../types';
 
 interface SavedLeadsProps {
   leads: Lead[];
-  onConvert: (lead: Lead) => void;
+  onConvert: (lead: Lead, dates?: { startDate?: string; finishDate?: string }) => void;
   onDelete: (id: string) => void;
 }
 
 const SavedLeadsPage: React.FC<SavedLeadsProps> = ({ leads, onConvert, onDelete }) => {
+  const [dateOverrides, setDateOverrides] = useState<Record<string, { startDate: string; finishDate: string }>>({});
+
+  const today = new Date().toISOString().split('T')[0];
+  const defaultFinish = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+  const getDatesForLead = (leadId: string) =>
+    dateOverrides[leadId] || { startDate: today, finishDate: defaultFinish };
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
@@ -39,9 +46,42 @@ const SavedLeadsPage: React.FC<SavedLeadsProps> = ({ leads, onConvert, onDelete 
                 </div>
               )}
 
+              <div className="grid grid-cols-1 gap-3 mb-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="text-[10px] text-slate-500 uppercase tracking-wider">
+                    Start Date
+                    <input
+                      type="date"
+                      className="mt-1 w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100"
+                      value={getDatesForLead(lead.id).startDate}
+                      onChange={(e) =>
+                        setDateOverrides((prev) => ({
+                          ...prev,
+                          [lead.id]: { ...getDatesForLead(lead.id), startDate: e.target.value }
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="text-[10px] text-slate-500 uppercase tracking-wider">
+                    Finish Date
+                    <input
+                      type="date"
+                      className="mt-1 w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100"
+                      value={getDatesForLead(lead.id).finishDate}
+                      onChange={(e) =>
+                        setDateOverrides((prev) => ({
+                          ...prev,
+                          [lead.id]: { ...getDatesForLead(lead.id), finishDate: e.target.value }
+                        }))
+                      }
+                    />
+                  </label>
+                </div>
+              </div>
+
               <div className="flex items-center space-x-3">
                 <button 
-                  onClick={() => onConvert(lead)}
+                  onClick={() => onConvert(lead, getDatesForLead(lead.id))}
                   className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-900/20"
                 >
                   <Rocket size={16} />

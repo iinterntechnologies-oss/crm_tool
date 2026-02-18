@@ -55,10 +55,10 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
 
       const rows = lines.slice(1).map((line) => line.split(',').map((cell) => cell.trim()));
       const parsed = rows
-        .filter((row) => row[0] && row[1])
+        .filter((row) => row.some((cell) => cell && cell.trim()))
         .map((row) => ({
-          businessName: row[0],
-          contact: row[1],
+          businessName: row[0] || '',
+          contact: row[1] || '',
           comment: row[2] || ''
         }));
 
@@ -72,11 +72,6 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
   const handleAddLeadSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log('Form submitted with:', formData);
-    if (!formData.businessName.trim() || !formData.contact.trim()) {
-      console.log('Form validation failed - missing required fields');
-      return;
-    }
-    console.log('Form validation passed, calling onAddLead');
     onAddLead({
       businessName: formData.businessName.trim(),
       contact: formData.contact.trim(),
@@ -128,7 +123,6 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
             <input
               type="text"
               placeholder="Business name"
-              required
               className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100"
               value={formData.businessName}
               onChange={(e) => setFormData((prev) => ({ ...prev, businessName: e.target.value }))}
@@ -136,7 +130,6 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
             <input
               type="text"
               placeholder="Contact number"
-              required
               className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100"
               value={formData.contact}
               onChange={(e) => setFormData((prev) => ({ ...prev, contact: e.target.value }))}
