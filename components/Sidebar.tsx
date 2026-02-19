@@ -8,7 +8,10 @@ import {
   Target, 
   CheckCircle,
   Menu,
-  ChevronLeft
+  ChevronLeft,
+  Activity,
+  ListTodo,
+  BarChart3
 } from 'lucide-react';
 import { PageType } from '../types';
 
@@ -27,6 +30,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
     { id: 'clients', label: 'Clients', icon: Briefcase },
     { id: 'goals', label: 'Goals', icon: Target },
     { id: 'customers', label: 'Success', icon: CheckCircle },
+    { id: 'activities', label: 'Activity', icon: Activity },
+    { id: 'tasks', label: 'Tasks', icon: ListTodo },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   ];
 
   return (
@@ -38,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
         }`}
       >
         <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800 bg-slate-950/20">
-          {isOpen && <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Pulse</h1>}
+          {isOpen && <h1 className="text-xl font-bold bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Pulse</h1>}
           <button 
             onClick={onToggle}
             className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"

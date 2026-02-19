@@ -130,3 +130,86 @@ def build_stats(db: Session):
         "revenue": revenue,
         "deadlines": deadlines,
     }
+
+
+# Activity CRUD
+def list_activities(db: Session, limit: int = 50):
+    return db.query(models.Activity).order_by(models.Activity.created_at.desc()).limit(limit).all()
+
+
+def create_activity(db: Session, payload):
+    activity = models.Activity(**payload.model_dump())
+    db.add(activity)
+    db.commit()
+    db.refresh(activity)
+    return activity
+
+
+def delete_activity(db: Session, activity: models.Activity):
+    db.delete(activity)
+    db.commit()
+
+
+# Task CRUD
+def list_tasks(db: Session):
+    return db.query(models.Task).order_by(models.Task.created_at.desc()).all()
+
+
+def get_task_by_id(db: Session, task_id: str):
+    return db.query(models.Task).filter(models.Task.id == task_id).first()
+
+
+def create_task(db: Session, payload):
+    task = models.Task(**payload.model_dump())
+    db.add(task)
+    db.commit()
+    db.refresh(task)
+    return task
+
+
+def update_task(db: Session, task: models.Task, payload):
+    for key, value in payload.model_dump(exclude_unset=True).items():
+        setattr(task, key, value)
+    db.commit()
+    db.refresh(task)
+    return task
+
+
+def delete_task(db: Session, task: models.Task):
+    db.delete(task)
+    db.commit()
+
+
+# Note CRUD
+def list_notes(db: Session, related_to: str = None, related_id: str = None):
+    query = db.query(models.Note).order_by(models.Note.is_pinned.desc(), models.Note.created_at.desc())
+    if related_to:
+        query = query.filter(models.Note.related_to == related_to)
+    if related_id:
+        query = query.filter(models.Note.related_id == related_id)
+    return query.all()
+
+
+def get_note_by_id(db: Session, note_id: str):
+    return db.query(models.Note).filter(models.Note.id == note_id).first()
+
+
+def create_note(db: Session, payload):
+    note = models.Note(**payload.model_dump())
+    db.add(note)
+    db.commit()
+    db.refresh(note)
+    return note
+
+
+def update_note(db: Session, note: models.Note, payload):
+    for key, value in payload.model_dump(exclude_unset=True).items():
+        setattr(note, key, value)
+    db.commit()
+    db.refresh(note)
+    return note
+
+
+def delete_note(db: Session, note: models.Note):
+    db.delete(note)
+    db.commit()

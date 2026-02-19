@@ -143,3 +143,83 @@ class StatsOut(BaseModel):
     active_projects: int
     revenue: float
     deadlines: int
+
+
+class ActivityBase(BaseModel):
+    activity_type: str
+    entity_type: str
+    entity_id: str
+    entity_name: str
+    description: str
+    activity_metadata: str = "{}"
+
+
+class ActivityCreate(ActivityBase):
+    pass
+
+
+class ActivityOut(ActivityBase):
+    id: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class TaskBase(BaseModel):
+    title: str
+    description: str = ""
+    related_to: str
+    related_id: str | None = None
+    priority: str = "medium"
+    status: str = "pending"
+    due_date: date | None = None
+
+
+class TaskCreate(TaskBase):
+    pass
+
+
+class TaskUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    related_to: str | None = None
+    related_id: str | None = None
+    priority: str | None = None
+    status: str | None = None
+    due_date: date | None = None
+    completed_at: datetime | None = None
+
+
+class TaskOut(TaskBase):
+    id: str
+    completed_at: datetime | None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class NoteBase(BaseModel):
+    content: str
+    related_to: str
+    related_id: str
+    is_pinned: bool = False
+
+
+class NoteCreate(NoteBase):
+    pass
+
+
+class NoteUpdate(BaseModel):
+    content: str | None = None
+    is_pinned: bool | None = None
+
+
+class NoteOut(NoteBase):
+    id: str
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True

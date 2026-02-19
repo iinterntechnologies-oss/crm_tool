@@ -1,4 +1,4 @@
-import { Lead, Client, Customer, Goal } from './types';
+import { Lead, Client, Customer, Goal, Activity, Task, Note } from './types';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -184,4 +184,109 @@ export const goalsApi = {
     body: JSON.stringify(toApiGoal(goal))
   }, token)),
   remove: (id: string, token: AuthToken) => request(`/goals/${id}`, { method: 'DELETE' }, token)
+};
+
+// Activity API
+const fromApiActivity = (activity: any): Activity => ({
+  id: activity.id,
+  activityType: activity.activity_type,
+  entityType: activity.entity_type,
+  entityId: activity.entity_id,
+  entityName: activity.entity_name,
+  description: activity.description,
+  activityMetadata: activity.activity_metadata ?? '{}',
+  createdAt: activity.created_at
+});
+
+const toApiActivity = (activity: Partial<Activity>) => ({
+  activity_type: activity.activityType,
+  entity_type: activity.entityType,
+  entity_id: activity.entityId,
+  entity_name: activity.entityName,
+  description: activity.description,
+  activity_metadata: activity.activityMetadata ?? '{}'
+});
+
+export const activitiesApi = {
+  list: async (token: AuthToken, limit: number = 50) => (await request<any[]>(`/activities?limit=${limit}`, {}, token)).map(fromApiActivity),
+  create: async (activity: Partial<Activity>, token: AuthToken) => fromApiActivity(await request('/activities', {
+    method: 'POST',
+    body: JSON.stringify(toApiActivity(activity))
+  }, token)),
+  remove: (id: string, token: AuthToken) => request(`/activities/${id}`, { method: 'DELETE' }, token)
+};
+
+// Task API
+const fromApiTask = (task: any): Task => ({
+  id: task.id,
+  title: task.title,
+  description: task.description ?? '',
+  relatedTo: task.related_to,
+  relatedId: task.related_id ?? null,
+  priority: task.priority,
+  status: task.status,
+  dueDate: task.due_date ?? null,
+  completedAt: task.completed_at ?? null,
+  createdAt: task.created_at
+});
+
+const toApiTask = (task: Partial<Task>) => ({
+  title: task.title,
+  description: task.description ?? '',
+  related_to: task.relatedTo,
+  related_id: task.relatedId ?? null,
+  priority: task.priority ?? 'medium',
+  status: task.status ?? 'pending',
+  due_date: task.dueDate ?? null
+});
+
+export const tasksApi = {
+  list: async (token: AuthToken) => (await request<any[]>('/tasks', {}, token)).map(fromApiTask),
+  create: async (task: Partial<Task>, token: AuthToken) => fromApiTask(await request('/tasks', {
+    method: 'POST',
+    body: JSON.stringify(toApiTask(task))
+  }, token)),
+  update: async (id: string, task: Partial<Task>, token: AuthToken) => fromApiTask(await request(`/tasks/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(toApiTask(task))
+  }, token)),
+  remove: (id: string, token: AuthToken) => request(`/tasks/${id}`, { method: 'DELETE' }, token)
+};
+
+// Note API
+const fromApiNote = (note: any): Note => ({
+  id: note.id,
+  content: note.content,
+  relatedTo: note.related_to,
+  relatedId: note.related_id,
+  isPinned: note.is_pinned ?? false,
+  createdAt: note.created_at,
+  updatedAt: note.updated_at
+});
+
+const toApiNote = (note: Partial<Note>) => ({
+  content: note.content,
+  related_to: note.relatedTo,
+  related_id: note.relatedId,
+  is_pinned: note.isPinned ?? false
+});
+
+export const notesApi = {
+  list: async (token: AuthToken, relatedTo?: string, relatedId?: string) => {
+    let url = '/notes';
+    const params = new URLSearchParams();
+    if (relatedTo) params.append('related_to', relatedTo);
+    if (relatedId) params.append('related_id', relatedId);
+    if (params.toString()) url += `?${params.toString()}`;
+    return (await request<any[]>(url, {}, token)).map(fromApiNote);
+  },
+  create: async (note: Partial<Note>, token: AuthToken) => fromApiNote(await request('/notes', {
+    method: 'POST',
+    body: JSON.stringify(toApiNote(note))
+  }, token)),
+  update: async (id: string, note: Partial<Note>, token: AuthToken) => fromApiNote(await request(`/notes/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ content: note.content, is_pinned: note.isPinned })
+  }, token)),
+  remove: (id: string, token: AuthToken) => request(`/notes/${id}`, { method: 'DELETE' }, token)
 };

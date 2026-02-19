@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .settings import settings
 from .db import Base, engine
-from .routers import auth, clients, customers, goals, leads, stats
+from .routers import auth, clients, customers, goals, leads, stats, activities, tasks, notes
 
 app = FastAPI(title="Pulse CRM API")
 
@@ -27,6 +27,9 @@ app.include_router(clients.router)
 app.include_router(customers.router)
 app.include_router(goals.router)
 app.include_router(stats.router)
+app.include_router(activities.router)
+app.include_router(tasks.router)
+app.include_router(notes.router)
 
 
 @app.get("/health")

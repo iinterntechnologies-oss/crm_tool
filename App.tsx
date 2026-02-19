@@ -11,9 +11,12 @@ import {
   Search,
   Bell,
   Menu,
-  X
+  X,
+  Activity,
+  ListTodo,
+  BarChart3
 } from 'lucide-react';
-import { PageType, Lead, Client, Customer, Goal } from './types';
+import { PageType, Lead, Client, Customer, Goal, Activity as ActivityType, Task, Note } from './types';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import LeadsPage from './components/Leads';
@@ -22,7 +25,10 @@ import ClientsPage from './components/Clients';
 import GoalsPage from './components/Goals';
 import CustomersPage from './components/Customers';
 import CelebrationOverlay from './components/CelebrationOverlay';
-import { authApi, clientsApi, customersApi, goalsApi, leadsApi } from './api';
+import ActivityTimeline from './components/ActivityTimeline';
+import Tasks from './components/Tasks';
+import Analytics from './components/Analytics';
+import { authApi, clientsApi, customersApi, goalsApi, leadsApi, activitiesApi, tasksApi, notesApi } from './api';
 
 
 
@@ -44,6 +50,9 @@ const App: React.FC = () => {
   const [goal, setGoal] = useState<Goal | null>(null);
   const [previousGoals, setPreviousGoals] = useState<Goal[]>([]);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [activities, setActivities] = useState<ActivityType[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
   const demoEmail = import.meta.env.VITE_DEMO_EMAIL || 'demo@pulse.app';
   const demoPassword = import.meta.env.VITE_DEMO_PASSWORD || 'demo1234';
@@ -80,17 +89,21 @@ const App: React.FC = () => {
   }, [errorMessage]);
 
   const loadAllData = async (activeToken: string) => {
-    const [loadedLeads, loadedClients, loadedCustomers, loadedGoals] = await Promise.all([
+    const [loadedLeads, loadedClients, loadedCustomers, loadedGoals, loadedActivities, loadedTasks] = await Promise.all([
       leadsApi.list(activeToken),
       clientsApi.list(activeToken),
       customersApi.list(activeToken),
-      goalsApi.list(activeToken)
+      goalsApi.list(activeToken),
+      activitiesApi.list(activeToken),
+      tasksApi.list(activeToken)
     ]);
 
     setLeads(loadedLeads.filter((lead) => lead.status !== 'saved'));
     setSavedLeads(loadedLeads.filter((lead) => lead.status === 'saved'));
     setClients(loadedClients);
     setCustomers(loadedCustomers);
+    setActivities(loadedActivities);
+    setTasks(loadedTasks);
 
     if (loadedGoals.length > 0) {
       setGoal(loadedGoals[0]);
@@ -416,6 +429,129 @@ const App: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  // Activity handlers
+  const createActivity = async (activity: Partial<ActivityType>) => {
+    try {
+      const created = await activitiesApi.create(activity, requireToken());
+      setActivities(prev => [created, ...prev]);
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create activity';
+      console.error('Create activity error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  const refreshActivities = async () => {
+    try {
+      const loadedActivities = await activitiesApi.list(requireToken());
+      setActivities(loadedActivities);
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to refresh activities';
+      console.error('Refresh activities error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  // Task handlers
+  const createTask = async (task: Omit<Task, 'id' | 'createdAt' | 'completedAt'>) => {
+    try {
+      const created = await tasksApi.create(task, requireToken());
+      setTasks(prev => [created, ...prev]);
+      
+      // Create activity
+      await createActivity({
+        activityType: 'task_created',
+        entityType: 'task',
+        entityId: created.id,
+        entityName: created.title,
+        description: `New task created: ${created.title}`,
+        activityMetadata: JSON.stringify({ priority: created.priority })
+      });
+      
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create task';
+      console.error('Create task error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  const updateTask = async (id: string, updates: Partial<Task>) => {
+    try {
+      const updated = await tasksApi.update(id, updates, requireToken());
+      setTasks(prev => prev.map(t => t.id === id ? updated : t));
+      
+      // Create activity if status changed to completed
+      if (updates.status === 'completed') {
+        await createActivity({
+          activityType: 'task_completed',
+          entityType: 'task',
+          entityId: updated.id,
+          entityName: updated.title,
+          description: `Task completed: ${updated.title}`,
+          activityMetadata: '{}'
+        });
+      }
+      
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update task';
+      console.error('Update task error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  const deleteTask = async (id: string) => {
+    try {
+      await tasksApi.remove(id, requireToken());
+      setTasks(prev => prev.filter(t => t.id !== id));
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete task';
+      console.error('Delete task error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  // Note handlers
+  const createNote = async (note: Partial<Note>) => {
+    try {
+      const created = await notesApi.create(note, requireToken());
+      setNotes(prev => [created, ...prev]);
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create note';
+      console.error('Create note error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  const updateNote = async (id: string, updates: Partial<Note>) => {
+    try {
+      const updated = await notesApi.update(id, updates, requireToken());
+      setNotes(prev => prev.map(n => n.id === id ? updated : n));
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to update note';
+      console.error('Update note error:', error);
+      setErrorMessage(message);
+    }
+  };
+
+  const deleteNote = async (id: string) => {
+    try {
+      await notesApi.remove(id, requireToken());
+      setNotes(prev => prev.filter(n => n.id !== id));
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete note';
+      console.error('Delete note error:', error);
+      setErrorMessage(message);
+    }
+  };
+
   // Celebration Logic
   useEffect(() => {
     if (goal && token && totalRevenue >= goal.targetAmount && !goal.isAchieved && goal.targetAmount > 0) {
@@ -501,6 +637,31 @@ const App: React.FC = () => {
           onDownloadReport={downloadCustomerReport}
           onDeleteCustomer={deleteCustomer}
           onUpdateCustomer={updateCustomer}
+        />
+      );
+      case 'activities': return (
+        <ActivityTimeline
+          activities={activities}
+          onRefresh={refreshActivities}
+        />
+      );
+      case 'tasks': return (
+        <Tasks
+          tasks={tasks}
+          clients={clients}
+          leads={[...leads, ...savedLeads]}
+          onCreateTask={createTask}
+          onUpdateTask={updateTask}
+          onDeleteTask={deleteTask}
+        />
+      );
+      case 'analytics': return (
+        <Analytics
+          clients={clients}
+          customers={customers}
+          leads={leads}
+          savedLeads={savedLeads}
+          goals={goal ? [goal, ...previousGoals] : previousGoals}
         />
       );
       default: return (

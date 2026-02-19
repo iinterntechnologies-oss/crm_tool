@@ -61,3 +61,43 @@ class Goal(Base):
     date_started: Mapped[date] = mapped_column(Date)
     date_achieved: Mapped[date | None] = mapped_column(Date, nullable=True)
     is_achieved: Mapped[bool] = mapped_column(Boolean, default=False)
+
+
+class Activity(Base):
+    __tablename__ = "activities"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    activity_type: Mapped[str] = mapped_column(String(50))  # lead_created, client_added, customer_completed, goal_achieved, task_completed
+    entity_type: Mapped[str] = mapped_column(String(50))  # lead, client, customer, goal, task
+    entity_id: Mapped[str] = mapped_column(String(36))
+    entity_name: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(String(500))
+    activity_metadata: Mapped[str] = mapped_column(String(1000), default="{}")  # JSON string for additional data
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+
+
+class Task(Base):
+    __tablename__ = "tasks"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    title: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(String(1000), default="")
+    related_to: Mapped[str] = mapped_column(String(20))  # client, lead, general
+    related_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    priority: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, urgent
+    status: Mapped[str] = mapped_column(String(20), default="pending")  # pending, in_progress, completed, cancelled
+    due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class Note(Base):
+    __tablename__ = "notes"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    content: Mapped[str] = mapped_column(String(2000))
+    related_to: Mapped[str] = mapped_column(String(20))  # lead, client
+    related_id: Mapped[str] = mapped_column(String(36))
+    is_pinned: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
