@@ -18,11 +18,10 @@ interface DashboardProps {
   onCreateLead: () => void;
   onSaveAllLeads: () => void;
   onGenerateReport: () => void;
-  onSyncContacts: () => void;
   onDeleteCustomer?: (id: string) => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCreateLead, onSaveAllLeads, onGenerateReport, onSyncContacts, onDeleteCustomer }) => {
+const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCreateLead, onSaveAllLeads, onGenerateReport, onDeleteCustomer }) => {
   const cards = [
     { title: 'Total Leads', value: stats.totalLeads, icon: Users, color: 'text-blue-400', bg: 'bg-blue-400/10' },
     { title: 'Active Projects', value: stats.activeProjects, icon: Briefcase, color: 'text-cyan-400', bg: 'bg-cyan-400/10' },
@@ -174,12 +173,6 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
               className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98]"
             >
               Generate Report
-            </button>
-            <button
-              onClick={onSyncContacts}
-              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98]"
-            >
-              Sync Contacts
             </button>
           </div>
         </div>

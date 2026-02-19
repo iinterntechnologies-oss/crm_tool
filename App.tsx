@@ -348,7 +348,7 @@ const App: React.FC = () => {
       await loadAllData(activeToken);
       setErrorMessage('');
     } catch (error) {
-      setErrorMessage('Failed to sync contacts.');
+      setErrorMessage('Failed to refresh data.');
     } finally {
       setIsLoading(false);
     }
@@ -443,7 +443,6 @@ const App: React.FC = () => {
           }}
           onSaveAllLeads={saveAllLeads}
           onGenerateReport={downloadReport}
-          onSyncContacts={refreshData}
           onDeleteCustomer={deleteCustomer}
         />
       );
@@ -515,7 +514,6 @@ const App: React.FC = () => {
           }}
           onSaveAllLeads={saveAllLeads}
           onGenerateReport={downloadReport}
-          onSyncContacts={refreshData}
           onDeleteCustomer={deleteCustomer}
         />
       );
