@@ -83,7 +83,7 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
         </div>
         <button
           onClick={() => setShowAddTask(true)}
-          className="px-4 py-2 bg-blue-600/80 hover:bg-blue-600 text-white rounded-lg flex items-center gap-2 transition-colors"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg flex items-center gap-2 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.99]"
         >
           <Plus size={20} />
           Add Task
@@ -91,33 +91,33 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4 flex-wrap">
-        <div className="flex gap-2">
-          <span className="text-slate-400 text-sm">Status:</span>
+      <div className="flex gap-4 flex-wrap items-center bg-slate-800/30 p-4 rounded-xl border border-slate-700/30">
+        <div className="flex gap-2 items-center">
+          <span className="text-slate-400 text-sm font-medium">Status:</span>
           {(['all', 'pending', 'in_progress', 'completed'] as const).map(status => (
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
-              className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 ${
                 filterStatus === status
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50'
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                  : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
               }`}
             >
               {status === 'all' ? 'All' : status.replace('_', ' ')}
             </button>
           ))}
         </div>
-        <div className="flex gap-2">
-          <span className="text-slate-400 text-sm">Priority:</span>
+        <div className="flex gap-2 items-center">
+          <span className="text-slate-400 text-sm font-medium">Priority:</span>
           {(['all', 'low', 'medium', 'high', 'urgent'] as const).map(priority => (
             <button
               key={priority}
               onClick={() => setFilterPriority(priority)}
-              className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 ${
                 filterPriority === priority
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50'
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                  : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
               }`}
             >
               {priority}
@@ -128,8 +128,8 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
 
       {/* Add Task Modal */}
       {showAddTask && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 rounded-2xl border border-slate-700 p-6 w-full max-w-xl">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-800 rounded-2xl border border-slate-700 p-6 w-full max-w-xl shadow-2xl animate-in zoom-in slide-in-from-bottom-4 duration-300">
             <h3 className="text-xl font-bold mb-4">Create New Task</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
@@ -238,15 +238,17 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
       {/* Tasks List */}
       <div className="space-y-3">
         {filteredTasks.length === 0 ? (
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-12 text-center">
-            <CheckCircle className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-400">No tasks found</p>
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-14 text-center shadow-xl">
+            <CheckCircle className="w-14 h-14 text-slate-600 mx-auto mb-4" />
+            <p className="text-slate-300 text-lg font-medium">No tasks found</p>
+            <p className="text-slate-500 text-sm mt-2">Create a new task to get started.</p>
           </div>
         ) : (
-          filteredTasks.map(task => (
+          filteredTasks.map((task, index) => (
             <div
               key={task.id}
-              className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-in fade-in slide-in-from-bottom-2 duration-300"
+              style={{ animationDelay: `${index * 30}ms` }}
             >
               <div className="flex items-start gap-4">
                 <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center border ${priorityColors[task.priority]}`}>

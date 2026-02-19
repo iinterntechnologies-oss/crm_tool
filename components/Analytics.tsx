@@ -84,45 +84,45 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-linear-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-sm rounded-xl border border-blue-500/20 p-6">
+        <div className="bg-linear-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-sm rounded-xl border border-blue-500/20 p-6 hover:border-blue-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 group">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-blue-500/20 rounded-lg">
-              <DollarSign className="w-6 h-6 text-blue-400" />
+            <div className="p-3 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors duration-300">
+              <DollarSign className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform duration-300" />
             </div>
-            <TrendingUp className="w-5 h-5 text-blue-400" />
+            <TrendingUp className="w-5 h-5 text-blue-400 group-hover:-translate-y-0.5 transition-transform duration-300" />
           </div>
           <p className="text-slate-400 text-sm">Total Revenue</p>
           <p className="text-2xl font-bold text-white mt-1">₹{analytics.totalRevenue.toLocaleString()}</p>
         </div>
 
-        <div className="bg-linear-to-br from-emerald-500/10 to-teal-500/10 backdrop-blur-sm rounded-xl border border-emerald-500/20 p-6">
+        <div className="bg-linear-to-br from-emerald-500/10 to-teal-500/10 backdrop-blur-sm rounded-xl border border-emerald-500/20 p-6 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20 group">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-emerald-500/20 rounded-lg">
-              <Users className="w-6 h-6 text-emerald-400" />
+            <div className="p-3 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/30 transition-colors duration-300">
+              <Users className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition-transform duration-300" />
             </div>
-            <TrendingUp className="w-5 h-5 text-emerald-400" />
+            <TrendingUp className="w-5 h-5 text-emerald-400 group-hover:-translate-y-0.5 transition-transform duration-300" />
           </div>
           <p className="text-slate-400 text-sm">Conversion Rate</p>
           <p className="text-2xl font-bold text-white mt-1">{analytics.conversionRate}%</p>
         </div>
 
-        <div className="bg-linear-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-xl border border-purple-500/20 p-6">
+        <div className="bg-linear-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-xl border border-purple-500/20 p-6 hover:border-purple-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20 group">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-purple-500/20 rounded-lg">
-              <BarChart3 className="w-6 h-6 text-purple-400" />
+            <div className="p-3 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors duration-300">
+              <BarChart3 className="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform duration-300" />
             </div>
-            <TrendingUp className="w-5 h-5 text-purple-400" />
+            <TrendingUp className="w-5 h-5 text-purple-400 group-hover:-translate-y-0.5 transition-transform duration-300" />
           </div>
           <p className="text-slate-400 text-sm">Avg Project Value</p>
           <p className="text-2xl font-bold text-white mt-1">₹{Number(analytics.avgProjectValue).toLocaleString()}</p>
         </div>
 
-        <div className="bg-linear-to-br from-amber-500/10 to-orange-500/10 backdrop-blur-sm rounded-xl border border-amber-500/20 p-6">
+        <div className="bg-linear-to-br from-amber-500/10 to-orange-500/10 backdrop-blur-sm rounded-xl border border-amber-500/20 p-6 hover:border-amber-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20 group">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-amber-500/20 rounded-lg">
-              <Target className="w-6 h-6 text-amber-400" />
+            <div className="p-3 bg-amber-500/20 rounded-lg group-hover:bg-amber-500/30 transition-colors duration-300">
+              <Target className="w-6 h-6 text-amber-400 group-hover:scale-110 transition-transform duration-300" />
             </div>
-            <TrendingUp className="w-5 h-5 text-amber-400" />
+            <TrendingUp className="w-5 h-5 text-amber-400 group-hover:-translate-y-0.5 transition-transform duration-300" />
           </div>
           <p className="text-slate-400 text-sm">Completion Rate</p>
           <p className="text-2xl font-bold text-white mt-1">{analytics.completionRate}%</p>
@@ -132,7 +132,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue Trend */}
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 shadow-xl">
           <div className="flex items-center gap-3 mb-6">
             <Calendar className="w-5 h-5 text-blue-400" />
             <h3 className="text-lg font-semibold">Revenue Trend (6 Months)</h3>
@@ -156,7 +156,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
         </div>
 
         {/* Business Type Distribution */}
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 shadow-xl">
           <div className="flex items-center gap-3 mb-6">
             <BarChart3 className="w-5 h-5 text-purple-400" />
             <h3 className="text-lg font-semibold">Top Business Types</h3>
@@ -192,7 +192,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
 
       {/* Goal Progress */}
       {analytics.currentGoal && (
-        <div className="bg-linear-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl border border-purple-500/20 p-6">
+        <div className="bg-linear-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl border border-purple-500/20 p-6 hover:border-purple-500/40 transition-all duration-300 shadow-xl hover:shadow-purple-500/20">
           <div className="flex items-center gap-3 mb-4">
             <Award className="w-6 h-6 text-purple-400" />
             <div>
@@ -223,19 +223,19 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center">
+        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg cursor-default">
           <p className="text-slate-400 text-sm mb-1">Total Leads</p>
           <p className="text-2xl font-bold text-white">{leads.length + savedLeads.length}</p>
         </div>
-        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center">
+        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg cursor-default">
           <p className="text-slate-400 text-sm mb-1">Active Clients</p>
           <p className="text-2xl font-bold text-white">{clients.length}</p>
         </div>
-        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center">
+        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg cursor-default">
           <p className="text-slate-400 text-sm mb-1">Completed Projects</p>
           <p className="text-2xl font-bold text-white">{customers.length}</p>
         </div>
-        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center">
+        <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4 text-center hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg cursor-default">
           <p className="text-slate-400 text-sm mb-1">Success Rate</p>
           <p className="text-2xl font-bold text-white">
             {clients.length > 0 ? ((customers.length / (clients.length + customers.length)) * 100).toFixed(0) : '0'}%

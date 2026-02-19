@@ -28,7 +28,7 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
         <p className="text-slate-400 text-xs md:text-sm mt-1">Track project progress and revenue.</p>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
         {clients.length > 0 ? (
           <div className="overflow-x-auto scrollbar-hide relative">
             <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-950/50 to-transparent pointer-events-none" />
@@ -44,7 +44,7 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
               </thead>
               <tbody className="divide-y divide-slate-800">
                 {clients.map((client) => (
-                  <tr key={client.id} className="hover:bg-slate-800/30 transition-colors group">
+                  <tr key={client.id} className="hover:bg-slate-800/40 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="font-semibold text-slate-100 text-sm md:text-base">{client.businessName}</div>
                       <div className="inline-flex items-center px-2 py-0.5 mt-1 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-tighter">
@@ -77,13 +77,13 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
                           <input 
                             type="number" 
                             placeholder="+ Add"
-                            className="w-16 md:w-20 bg-slate-950 border border-slate-800 rounded-lg py-1 px-2 text-[10px] md:text-xs focus:ring-1 focus:ring-blue-500 outline-none mr-1.5"
+                            className="w-16 md:w-20 bg-slate-950 border border-slate-800 rounded-lg py-1 px-2 text-[10px] md:text-xs focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none mr-1.5"
                             value={paymentInput[client.id] || ''}
                             onChange={(e) => setPaymentInput(prev => ({ ...prev, [client.id]: e.target.value }))}
                           />
                           <button 
                             onClick={() => handlePaymentSubmit(client.id)}
-                            className="p-1.5 bg-emerald-600/10 hover:bg-emerald-600 text-emerald-500 hover:text-white rounded-lg border border-emerald-500/20 transition-all active:scale-95"
+                            className="p-1.5 bg-emerald-600/10 hover:bg-emerald-600 text-emerald-500 hover:text-white rounded-lg border border-emerald-500/20 transition-all active:scale-95 hover:shadow-lg hover:shadow-emerald-500/30"
                           >
                             <CreditCard size={14} />
                           </button>
@@ -94,14 +94,14 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
                       <div className="flex items-center justify-center gap-2">
                         <button 
                           onClick={() => onMarkCompleted(client.id)}
-                          className="flex items-center space-x-2 bg-slate-950 hover:bg-emerald-600 border border-slate-800 hover:border-emerald-500 text-slate-400 hover:text-white px-3 md:px-4 py-2 rounded-xl transition-all font-bold text-xs md:text-sm group active:scale-[0.98]"
+                          className="flex items-center space-x-2 bg-slate-950 hover:bg-emerald-600 border border-slate-800 hover:border-emerald-500 text-slate-400 hover:text-white px-3 md:px-4 py-2 rounded-xl transition-all font-bold text-xs md:text-sm group active:scale-[0.98] hover:shadow-lg hover:shadow-emerald-500/30"
                         >
                           <CheckCircle size={16} className="text-slate-500 group-hover:text-white" />
                           <span className="whitespace-nowrap">Done</span>
                         </button>
                         <button 
                           onClick={() => onDeleteClient?.(client.id)}
-                          className="flex items-center justify-center bg-slate-950 hover:bg-red-600/20 border border-slate-800 hover:border-red-500 text-slate-400 hover:text-red-400 px-3 md:px-4 py-2 rounded-xl transition-all font-bold text-xs md:text-sm active:scale-[0.98]"
+                          className="flex items-center justify-center bg-slate-950 hover:bg-red-600/20 border border-slate-800 hover:border-red-500 text-slate-400 hover:text-red-400 px-3 md:px-4 py-2 rounded-xl transition-all font-bold text-xs md:text-sm active:scale-[0.98] hover:shadow-lg hover:shadow-red-500/20"
                           title="Delete client"
                         >
                           <Trash2 size={16} />

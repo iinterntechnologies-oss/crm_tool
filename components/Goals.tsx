@@ -54,7 +54,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Main Goal Card */}
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl">
+        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl hover:border-slate-700 transition-all duration-300">
           <div className="absolute top-0 right-0 p-8 opacity-5 hidden md:block">
             <Target size={200} />
           </div>
@@ -98,10 +98,10 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
                       </p>
                     </div>
                     <div className="flex space-x-2 pt-2">
-                      <button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-semibold transition-all">
+                      <button onClick={handleSave} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl flex items-center justify-center space-x-2 font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/30 active:scale-[0.98]">
                         <Check size={18} /> <span>Save Goal</span>
                       </button>
-                      <button onClick={() => setIsEditing(false)} className="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold transition-all">
+                      <button onClick={() => setIsEditing(false)} className="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold transition-all active:scale-[0.98]">
                         Cancel
                       </button>
                     </div>
@@ -131,7 +131,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
               {!isEditing && (
                 <button 
                   onClick={() => setIsEditing(true)}
-                  className="p-3 bg-slate-800 hover:bg-slate-700 rounded-2xl transition-all border border-slate-700 shadow-lg"
+                  className="p-3 bg-slate-800 hover:bg-slate-700 rounded-2xl transition-all border border-slate-700 shadow-lg hover:shadow-slate-900/50"
                   title="Edit Goal"
                 >
                   <Edit2 size={20} className="text-slate-300" />
@@ -153,7 +153,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
 
               <div className="h-4 md:h-6 bg-slate-950 rounded-full p-0.5 md:p-1 border border-slate-800 shadow-inner overflow-hidden">
                 <div 
-                  className={`h-full rounded-full bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400 animate-progress relative transition-all duration-1000`}
+                  className={`h-full rounded-full bg-linear-to-r from-blue-600 via-blue-400 to-cyan-400 animate-progress relative transition-all duration-1000`}
                   style={{ width: `${progress}%` }}
                 >
                   <div className="absolute inset-0 bg-white/20 animate-pulse" />
@@ -173,7 +173,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
         </div>
 
         {/* Goal Stats Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col justify-between overflow-hidden relative shadow-xl">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col justify-between overflow-hidden relative shadow-xl hover:border-slate-700 transition-all duration-300">
           <div className="space-y-6 relative z-10">
             <h4 className="font-bold text-slate-400 text-xs uppercase tracking-wider">Goal Insights</h4>
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6">
@@ -225,7 +225,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
           Previous Achievements
         </h3>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl hover:border-slate-700 transition-all duration-300">
           <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full text-left min-w-[600px]">
               <thead>

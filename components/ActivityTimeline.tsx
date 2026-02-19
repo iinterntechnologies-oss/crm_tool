@@ -1,13 +1,14 @@
 import React from 'react';
-import { Activity as ActivityIcon, CheckCircle, Target, Users, Briefcase, ListTodo, Clock } from 'lucide-react';
+import { Activity as ActivityIcon, CheckCircle, Target, Users, Briefcase, ListTodo, Clock, Trash2 } from 'lucide-react';
 import { Activity } from '../types';
 
 interface ActivityTimelineProps {
   activities: Activity[];
   onRefresh: () => void;
+  onDelete: (id: string) => void;
 }
 
-const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ activities, onRefresh }) => {
+const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ activities, onRefresh, onDelete }) => {
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'lead_created':
@@ -66,24 +67,27 @@ const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ activities, onRefre
         </div>
         <button
           onClick={onRefresh}
-          className="px-4 py-2 bg-blue-600/80 hover:bg-blue-600 text-white rounded-lg transition-colors"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.99] flex items-center gap-2"
         >
+          <ActivityIcon className="w-4 h-4" />
           Refresh
         </button>
       </div>
 
-      <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 shadow-xl">
         {activities.length === 0 ? (
-          <div className="text-center py-12">
-            <Clock className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-400">No activities yet</p>
+          <div className="text-center py-14">
+            <Clock className="w-14 h-14 text-slate-600 mx-auto mb-4" />
+            <p className="text-slate-300 text-lg font-medium">No activities yet</p>
+            <p className="text-slate-500 text-sm mt-2">Your latest updates will appear here.</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {activities.map((activity, index) => (
               <div
                 key={activity.id}
-                className="flex gap-4 p-4 bg-slate-900/30 rounded-lg border border-slate-700/30 hover:border-slate-600/50 transition-all"
+                className="flex gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/30 hover:border-slate-600/50 hover:bg-slate-900/60 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-in fade-in slide-in-from-left duration-300"
+                style={{ animationDelay: `${index * 40}ms` }}
               >
                 <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center border ${getActivityColor(activity.activityType)}`}>
                   {getActivityIcon(activity.activityType)}
@@ -94,8 +98,16 @@ const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ activities, onRefre
                     {activity.entityName} • {activity.entityType}
                   </p>
                 </div>
-                <div className="shrink-0 text-slate-500 text-sm">
-                  {formatTimestamp(activity.createdAt)}
+                <div className="shrink-0 flex items-center gap-3">
+                  <span className="text-slate-500 text-sm">{formatTimestamp(activity.createdAt)}</span>
+                  <button
+                    onClick={() => onDelete(activity.id)}
+                    className="p-2 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                    aria-label="Delete activity"
+                    title="Delete activity"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             ))}

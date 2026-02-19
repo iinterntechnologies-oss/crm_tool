@@ -79,7 +79,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {cards.map((card, i) => (
-          <div key={i} className="bg-slate-900 border border-slate-800 p-5 md:p-6 rounded-2xl hover:border-slate-700 transition-all group shadow-lg">
+          <div key={i} className="bg-slate-900 border border-slate-800 p-5 md:p-6 rounded-2xl hover:border-slate-700 transition-all duration-300 group shadow-lg hover:shadow-2xl hover:shadow-slate-900/40 hover:-translate-y-0.5">
             <div className="flex justify-between items-start mb-4">
               <div className={`p-2.5 md:p-3 rounded-xl ${card.bg}`}>
                 <card.icon className={`h-5 w-5 md:h-6 md:w-6 ${card.color}`} />
@@ -93,7 +93,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl hover:border-slate-700 transition-all duration-300">
           <div className="p-5 md:p-6 border-b border-slate-800 flex justify-between items-center">
             <h3 className="font-semibold text-base md:text-lg">Active Projects</h3>
             <button className="text-xs md:text-sm text-blue-400 hover:text-blue-300 flex items-center">
@@ -151,26 +151,26 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl h-fit">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl h-fit hover:border-slate-700 transition-all duration-300">
           <div className="p-5 md:p-6 border-b border-slate-800">
             <h3 className="font-semibold text-base md:text-lg">Quick Actions</h3>
           </div>
           <div className="p-5 md:p-6 space-y-3 md:space-y-4">
             <button
               onClick={onCreateLead}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-sm md:text-base transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98]"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-sm md:text-base transition-all shadow-lg shadow-blue-900/30 hover:shadow-blue-500/40 active:scale-[0.98]"
             >
               Create New Lead
             </button>
             <button
               onClick={onSaveAllLeads}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold text-sm md:text-base transition-all shadow-lg shadow-emerald-900/20 active:scale-[0.98]"
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold text-sm md:text-base transition-all shadow-lg shadow-emerald-900/30 hover:shadow-emerald-500/40 active:scale-[0.98]"
             >
               Save All Leads
             </button>
             <button
               onClick={onGenerateReport}
-              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98]"
+              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 py-3 rounded-xl font-bold text-sm md:text-base transition-all active:scale-[0.98] hover:shadow-lg"
             >
               Generate Report
             </button>
@@ -179,7 +179,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
       </div>
 
       {customers.length > 0 && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl hover:border-slate-700 transition-all duration-300">
           <div className="p-5 md:p-6 border-b border-slate-800 flex justify-between items-center">
             <h3 className="font-semibold text-base md:text-lg">Recent Completions</h3>
             <span className="text-xs md:text-sm text-slate-400">({customers.length})</span>
@@ -190,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, clients, customers, onCrea
                 const completionDate = new Date(customer.completedDate);
                 const formattedDate = completionDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 return (
-                  <div key={customer.id} className="flex items-center justify-between p-3 md:p-4 bg-slate-950/50 border border-emerald-500/20 rounded-xl hover:border-emerald-500/40 transition-all">
+                  <div key={customer.id} className="flex items-center justify-between p-3 md:p-4 bg-slate-950/50 border border-emerald-500/20 rounded-xl hover:border-emerald-500/40 transition-all hover:shadow-lg hover:shadow-emerald-500/10">
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-sm md:text-base truncate text-slate-100">{customer.businessName}</p>
                       <p className="text-[10px] md:text-xs text-slate-500">₹{customer.totalPaid.toLocaleString()} • {formattedDate}</p>

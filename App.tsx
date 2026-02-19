@@ -454,6 +454,18 @@ const App: React.FC = () => {
     }
   };
 
+  const deleteActivity = async (id: string) => {
+    try {
+      await activitiesApi.remove(id, requireToken());
+      setActivities(prev => prev.filter(activity => activity.id !== id));
+      setErrorMessage('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to delete activity';
+      console.error('Delete activity error:', error);
+      setErrorMessage(message);
+    }
+  };
+
   // Task handlers
   const createTask = async (task: Omit<Task, 'id' | 'createdAt' | 'completedAt'>) => {
     try {
@@ -643,6 +655,7 @@ const App: React.FC = () => {
         <ActivityTimeline
           activities={activities}
           onRefresh={refreshActivities}
+          onDelete={deleteActivity}
         />
       );
       case 'tasks': return (
