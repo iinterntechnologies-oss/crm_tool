@@ -86,7 +86,7 @@ const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ activities, onRefre
             {activities.map((activity, index) => (
               <div
                 key={activity.id}
-                className="flex gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/30 hover:border-slate-600/50 hover:bg-slate-900/60 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-in fade-in slide-in-from-left duration-300"
+                className="flex gap-4 p-4 bg-slate-900/40 rounded-xl border border-slate-700/30 hover:border-slate-600/50 hover:bg-slate-900/60 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-in fade-in slide-in-from-left"
                 style={{ animationDelay: `${index * 40}ms` }}
               >
                 <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center border ${getActivityColor(activity.activityType)}`}>
