@@ -137,6 +137,19 @@ const App: React.FC = () => {
     initialize();
   }, [demoEmail, demoPassword]);
 
+  useEffect(() => {
+    if (!token) return;
+
+    const intervalId = setInterval(() => {
+      loadAllData(token).catch((error) => {
+        console.error('Background refresh error:', error);
+        setErrorMessage('Failed to refresh data in real time.');
+      });
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [token]);
+
   // Handlers
   const selectLead = async (leadId: string) => {
     try {
@@ -282,7 +295,7 @@ const App: React.FC = () => {
     }
   };
 
-  const updatePayment = async (clientId: string, amount: number) => {
+  const updatePayment = async (clientId: string, amount: number): Promise<void> => {
     try {
       const client = clients.find(c => c.id === clientId);
       if (!client) return;
@@ -304,7 +317,7 @@ const App: React.FC = () => {
     }
   };
 
-  const markClientCompleted = async (clientId: string) => {
+  const markClientCompleted = async (clientId: string): Promise<void> => {
     try {
       const token = requireToken();
       const client = clients.find(c => c.id === clientId);
@@ -585,6 +598,9 @@ const App: React.FC = () => {
           stats={stats}
           clients={clients}
           customers={customers}
+          leads={leads}
+          savedLeads={savedLeads}
+          goals={goal ? [goal, ...previousGoals] : previousGoals}
           onCreateLead={() => {
             setCurrentPage('leads');
             setShowAddLead(true);
@@ -682,6 +698,9 @@ const App: React.FC = () => {
           stats={stats}
           clients={clients}
           customers={customers}
+          leads={leads}
+          savedLeads={savedLeads}
+          goals={goal ? [goal, ...previousGoals] : previousGoals}
           onCreateLead={() => {
             setCurrentPage('leads');
             setShowAddLead(true);

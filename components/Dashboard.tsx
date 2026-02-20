@@ -76,16 +76,16 @@ const Dashboard: React.FC<DashboardProps> = ({
       return { month: monthStr, revenue };
     });
 
-    // Business type distribution
+    // Business type distribution by revenue
     const businessTypes = clients.reduce((acc, client) => {
-      acc[client.businessType] = (acc[client.businessType] || 0) + 1;
+      acc[client.businessType] = (acc[client.businessType] || 0) + client.paymentCollected;
       return acc;
     }, {} as Record<string, number>);
 
     const topBusinessTypes = Object.entries(businessTypes)
       .sort((a, b) => (b[1] as number) - (a[1] as number))
       .slice(0, 5)
-      .map(([type, count]) => ({ type, count: count as number }));
+      .map(([type, revenue]) => ({ type, revenue: revenue as number }));
 
     // Goal progress
     const currentGoal = goals.find(g => !g.isAchieved);
@@ -316,79 +316,6 @@ const Dashboard: React.FC<DashboardProps> = ({
                 hoverGradient="from-purple-500 to-purple-400"
               />
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Analytics Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Trend */}
-        <div className="group relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 transition-all duration-300 shadow-2xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 bg-blue-500/20 rounded-lg">
-                <Calendar className="w-5 h-5 text-blue-400" />
-              </div>
-              <h3 className="text-lg font-semibold">Revenue Trend</h3>
-            </div>
-
-            <div className="space-y-4">
-              {analytics.monthlyRevenue.map((item, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-400 font-medium">{item.month}</span>
-                    <span className="text-white font-semibold">₹{item.revenue.toLocaleString()}</span>
-                  </div>
-                  <div className="relative h-2.5 bg-slate-900/60 rounded-full overflow-hidden border border-slate-700/30">
-                    <div
-                      className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 via-cyan-500 to-emerald-500 rounded-full transition-all duration-500 shadow-lg shadow-blue-500/20"
-                      style={{ width: `${(item.revenue / maxRevenue) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Business Type Distribution */}
-        <div className="group relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 transition-all duration-300 shadow-2xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 bg-purple-500/20 rounded-lg">
-                <BarChart3 className="w-5 h-5 text-purple-400" />
-              </div>
-              <h3 className="text-lg font-semibold">Top Business Types</h3>
-            </div>
-
-            {analytics.topBusinessTypes.length === 0 ? (
-              <div className="text-center py-8 text-slate-400">No data available</div>
-            ) : (
-              <div className="space-y-4">
-                {analytics.topBusinessTypes.map((item, index) => {
-                  const total = analytics.topBusinessTypes.reduce((acc, t) => acc + t.count, 0);
-                  const percentage = ((item.count / total) * 100).toFixed(0);
-                  const colors = ['from-purple-500 to-pink-500', 'from-blue-500 to-cyan-500', 'from-emerald-500 to-teal-500', 'from-amber-500 to-orange-500', 'from-red-500 to-rose-500'];
-
-                  return (
-                    <div key={index} className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-300 font-medium">{item.type}</span>
-                        <span className="text-slate-400 text-xs">{item.count} clients ({percentage}%)</span>
-                      </div>
-                      <div className="relative h-2.5 bg-slate-900/60 rounded-full overflow-hidden border border-slate-700/30">
-                        <div
-                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${colors[index % colors.length]} rounded-full transition-all duration-500 shadow-lg`}
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </div>
       </div>

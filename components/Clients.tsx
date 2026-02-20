@@ -5,18 +5,18 @@ import { Client } from '../types';
 
 interface ClientsPageProps {
   clients: Client[];
-  onUpdatePayment: (id: string, amount: number) => void;
-  onMarkCompleted: (id: string) => void;
+  onUpdatePayment: (id: string, amount: number) => Promise<void>;
+  onMarkCompleted: (id: string) => Promise<void>;
   onDeleteClient?: (id: string) => void;
 }
 
 const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onMarkCompleted, onDeleteClient }) => {
   const [paymentInput, setPaymentInput] = useState<Record<string, string>>({});
 
-  const handlePaymentSubmit = (clientId: string) => {
+  const handlePaymentSubmit = async (clientId: string) => {
     const amount = parseFloat(paymentInput[clientId]);
     if (!isNaN(amount) && amount > 0) {
-      onUpdatePayment(clientId, amount);
+      await onUpdatePayment(clientId, amount);
       setPaymentInput(prev => ({ ...prev, [clientId]: '' }));
     }
   };
@@ -93,7 +93,14 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-2">
                         <button 
-                          onClick={() => onMarkCompleted(client.id)}
+                          onClick={async () => {
+                            const pendingAmount = parseFloat(paymentInput[client.id]);
+                            if (!isNaN(pendingAmount) && pendingAmount > 0) {
+                              await onUpdatePayment(client.id, pendingAmount);
+                              setPaymentInput(prev => ({ ...prev, [client.id]: '' }));
+                            }
+                            await onMarkCompleted(client.id);
+                          }}
                           className="flex items-center space-x-2 bg-slate-950 hover:bg-emerald-600 border border-slate-800 hover:border-emerald-500 text-slate-400 hover:text-white px-3 md:px-4 py-2 rounded-xl transition-all font-bold text-xs md:text-sm group active:scale-[0.98] hover:shadow-lg hover:shadow-emerald-500/30"
                         >
                           <CheckCircle size={16} className="text-slate-500 group-hover:text-white" />
