@@ -78,6 +78,9 @@ export interface Task {
   dueDate: string | null;
   completedAt: string | null;
   createdAt: string;
+  taskTemplate?: string;
+  serviceType?: string;
+  isTemplate?: boolean;
 }
 
 export interface Note {

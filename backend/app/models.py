@@ -114,6 +114,10 @@ class Task(Base):
     due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    # Task Template Support
+    task_template: Mapped[str | None] = mapped_column(String(50), nullable=True)  # e.g., 'onboarding', 'development_checklist'
+    service_type: Mapped[str | None] = mapped_column(String(50), nullable=True)  # e.g., 'full_development', 'seo', 'maintenance'
+    is_template: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class Note(Base):

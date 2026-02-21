@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from datetime import date
 from .. import crud, schemas, models
 from ..deps import get_db, get_current_user
+from ..task_templates import create_task_list_for_client
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
@@ -47,3 +49,42 @@ def delete_task(
         raise HTTPException(status_code=404, detail="Task not found")
     crud.delete_task(db, task)
     return {"ok": True}
+
+
+@router.post("/generate-onboarding/{client_id}", response_model=list[schemas.TaskOut])
+def generate_onboarding_tasks(
+    client_id: str,
+    service_type: str = "default",
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    """
+    Generate standard onboarding tasks for a newly converted client.
+    
+    Args:
+        client_id: ID of the client to create tasks for
+        service_type: Type of service (full_development, seo, maintenance, branding, web_design, default)
+    
+    Returns:
+        List of created tasks
+    """
+    # Verify client exists
+    client = crud.get_client_by_id(db, client_id)
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    
+    # Generate task list from templates
+    task_data_list = create_task_list_for_client(
+        client_id=client_id,
+        service_type=service_type,
+        onboarding_date=client.onboarding
+    )
+    
+    # Create all tasks
+    created_tasks = []
+    for task_data in task_data_list:
+        task_schema = schemas.TaskCreate(**task_data)
+        created_task = crud.create_task(db, task_schema)
+        created_tasks.append(created_task)
+    
+    return created_tasks

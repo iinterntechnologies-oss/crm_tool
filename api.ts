@@ -249,7 +249,10 @@ const fromApiTask = (task: any): Task => ({
   status: task.status,
   dueDate: task.due_date ?? null,
   completedAt: task.completed_at ?? null,
-  createdAt: task.created_at
+  createdAt: task.created_at,
+  taskTemplate: task.task_template ?? undefined,
+  serviceType: task.service_type ?? undefined,
+  isTemplate: task.is_template ?? false
 });
 
 const toApiTask = (task: Partial<Task>) => ({
@@ -259,7 +262,10 @@ const toApiTask = (task: Partial<Task>) => ({
   related_id: task.relatedId ?? null,
   priority: task.priority ?? 'medium',
   status: task.status ?? 'pending',
-  due_date: task.dueDate ?? null
+  due_date: task.dueDate ?? null,
+  task_template: task.taskTemplate ?? null,
+  service_type: task.serviceType ?? null,
+  is_template: task.isTemplate ?? false
 });
 
 export const tasksApi = {
@@ -272,7 +278,12 @@ export const tasksApi = {
     method: 'PATCH',
     body: JSON.stringify(toApiTask(task))
   }, token)),
-  remove: (id: string, token: AuthToken) => request(`/tasks/${id}`, { method: 'DELETE' }, token)
+  remove: (id: string, token: AuthToken) => request(`/tasks/${id}`, { method: 'DELETE' }, token),
+  generateOnboarding: async (clientId: string, serviceType: string = 'default', token: AuthToken) => (
+    await request<any[]>(`/tasks/generate-onboarding/${clientId}?service_type=${serviceType}`, {
+      method: 'POST'
+    }, token)
+  ).map(fromApiTask)
 };
 
 // Note API

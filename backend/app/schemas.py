@@ -201,6 +201,9 @@ class TaskBase(BaseModel):
     priority: str = "medium"
     status: str = "pending"
     due_date: date | None = None
+    task_template: str | None = None
+    service_type: str | None = None
+    is_template: bool = False
 
 
 class TaskCreate(TaskBase):
@@ -216,6 +219,9 @@ class TaskUpdate(BaseModel):
     status: str | None = None
     due_date: date | None = None
     completed_at: datetime | None = None
+    task_template: str | None = None
+    service_type: str | None = None
+    is_template: bool | None = None
 
 
 class TaskOut(TaskBase):

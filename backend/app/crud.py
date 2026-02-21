@@ -45,6 +45,10 @@ def list_clients(db: Session):
     return db.query(models.Client).all()
 
 
+def get_client_by_id(db: Session, client_id: str):
+    return db.query(models.Client).filter(models.Client.id == client_id).first()
+
+
 def create_client(db: Session, payload):
     client = models.Client(**payload.model_dump())
     db.add(client)

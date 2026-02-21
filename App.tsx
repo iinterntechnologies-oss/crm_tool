@@ -278,8 +278,28 @@ const App: React.FC = () => {
         maintenancePlan: specs?.maintenancePlan || false,
         renewalDate: specs?.renewalDate || undefined
       };
+      
       await leadsApi.remove(lead.id, token);
       const createdClient = await clientsApi.create(newClient, token);
+      
+      // Map business type to service type for task templates
+      const serviceTypeMap: { [key: string]: string } = {
+        'web_design': 'web_design',
+        'full_development': 'full_development',
+        'seo': 'seo',
+        'maintenance': 'maintenance',
+        'branding': 'branding'
+      };
+      const serviceType = serviceTypeMap[newClient.businessType.toLowerCase().replace(/\s+/g, '_')] || 'default';
+      
+      // Generate onboarding tasks
+      try {
+        await tasksApi.generateOnboarding(createdClient.id, serviceType, token);
+      } catch (taskError) {
+        console.error('Failed to generate onboarding tasks:', taskError);
+        // Don't fail the entire conversion if task generation fails
+      }
+      
       setSavedLeads(prev => prev.filter(l => l.id !== lead.id));
       setClients(prev => [...prev, createdClient]);
       setErrorMessage('');
