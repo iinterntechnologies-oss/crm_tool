@@ -147,7 +147,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tighter bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
             Command Center
           </h1>
           <p className="text-slate-400 text-sm mt-2">Unified analytics and actionable business intelligence</p>
@@ -200,12 +200,43 @@ const Dashboard: React.FC<DashboardProps> = ({
           borderColor="border-amber-500/30"
           accentColor="text-amber-400"
         />
+        <div className="md:col-span-2 group relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
+          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 flex flex-col hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/15 to-teal-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2.5 bg-emerald-500/20 rounded-lg">
+                  <Zap className="w-5 h-5 text-emerald-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white tracking-tight">Quick Actions</h3>
+              </div>
+
+              <div className="space-y-3 flex-1 flex flex-col">
+                <ActionButton
+                  onClick={onCreateLead}
+                  label="Create New Lead"
+                  icon={<Users className="w-4 h-4" />}
+                  gradient="from-blue-600 to-blue-500"
+                  hoverGradient="from-blue-500 to-blue-400"
+                />
+                <ActionButton
+                  onClick={onGenerateReport}
+                  label="Generate Report"
+                  icon={<BarChart3 className="w-4 h-4" />}
+                  gradient="from-purple-600 to-purple-500"
+                  hoverGradient="from-purple-500 to-purple-400"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8">
         {/* Active Projects - Large Card */}
-        <div className="lg:col-span-2 group relative">
+        <div className="group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
           <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 hover:border-slate-600/50 hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-cyan-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -222,7 +253,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
             {chartData.length > 0 ? (
               <div className="space-y-4">
-                <div className="flex items-center justify-between text-xs text-slate-400 uppercase tracking-wider font-medium">
+                <div className="flex items-center justify-between text-xs text-slate-400 uppercase tracking-widest font-medium">
                   <span>Progress Overview</span>
                   <span className="flex items-center gap-2">
                     <Zap className="w-3 h-3 text-amber-400" />
@@ -297,45 +328,6 @@ const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="group relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 h-full flex flex-col hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/15 to-teal-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 bg-emerald-500/20 rounded-lg">
-                <Zap className="w-5 h-5 text-emerald-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-white tracking-tight">Quick Actions</h3>
-            </div>
-
-            <div className="space-y-3 flex-1 flex flex-col">
-              <ActionButton
-                onClick={onCreateLead}
-                label="Create New Lead"
-                icon={<Users className="w-4 h-4" />}
-                gradient="from-blue-600 to-blue-500"
-                hoverGradient="from-blue-500 to-blue-400"
-              />
-              <ActionButton
-                onClick={onSaveAllLeads}
-                label="Save All Leads"
-                icon={<Briefcase className="w-4 h-4" />}
-                gradient="from-emerald-600 to-emerald-500"
-                hoverGradient="from-emerald-500 to-emerald-400"
-              />
-              <ActionButton
-                onClick={onGenerateReport}
-                label="Generate Report"
-                icon={<BarChart3 className="w-4 h-4" />}
-                gradient="from-purple-600 to-purple-500"
-                hoverGradient="from-purple-500 to-purple-400"
-              />
-            </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Goal Progress */}
@@ -448,7 +440,7 @@ const MetricCard: React.FC<{
         </div>
         <TrendingUp className={`w-4 h-4 ${accentColor} opacity-60 group-hover:opacity-100 transition-opacity`} />
       </div>
-      <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">{label}</p>
+      <p className="text-slate-400 text-sm font-medium uppercase tracking-widest">{label}</p>
       <p className="text-2xl md:text-3xl font-bold mt-2 text-white tracking-tight">{value}</p>
       <p className={`text-xs mt-2 ${accentColor} font-medium`}>{trend}</p>
       </div>
@@ -486,7 +478,7 @@ const SummaryCard: React.FC<{
     <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 to-slate-800/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 text-center hover:border-slate-600/50 hover:-translate-y-1 hover:shadow-slate-600/20 transition-all duration-300 shadow-lg group-hover:shadow-xl">
       <div className="flex justify-center mb-3 text-slate-400">{icon}</div>
-      <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">{label}</p>
+      <p className="text-slate-400 text-xs font-medium uppercase tracking-widest">{label}</p>
       <p className="text-2xl md:text-3xl font-bold mt-3 text-white tracking-tight">{value}</p>
     </div>
   </div>
