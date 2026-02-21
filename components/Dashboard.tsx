@@ -159,8 +159,8 @@ const Dashboard: React.FC<DashboardProps> = ({
         )}
       </div>
 
-      {/* Key Metrics - Glassmorphism Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Key Metrics - Bento Style Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <MetricCard
           icon={<DollarSign className="w-6 h-6" />}
           label="Total Revenue"
@@ -169,6 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           gradient="from-blue-500/20 to-cyan-500/20"
           borderColor="border-blue-500/30"
           accentColor="text-blue-400"
+          colSpan="md:col-span-2"
         />
         <MetricCard
           icon={<Users className="w-6 h-6" />}
@@ -178,6 +179,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           gradient="from-emerald-500/20 to-teal-500/20"
           borderColor="border-emerald-500/30"
           accentColor="text-emerald-400"
+          colSpan="md:col-span-2"
         />
         <MetricCard
           icon={<BarChart3 className="w-6 h-6" />}
@@ -204,7 +206,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         {/* Active Projects - Large Card */}
         <div className="lg:col-span-2 group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all duration-300 shadow-2xl">
+          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 hover:border-slate-600/50 hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2.5 bg-blue-500/20 rounded-lg">
                 <Briefcase className="w-5 h-5 text-blue-400" />
@@ -265,7 +267,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
                   {chartData.map((point) => (
-                    <div key={point.id} className="bg-slate-900/50 rounded-lg p-3 border border-slate-700/30 hover:border-slate-600/50 transition-all">
+                    <div key={point.id} className="bg-slate-900/50 rounded-lg p-3 border border-slate-700/30 hover:border-slate-600/50 hover:shadow-cyan-500/20 hover:-translate-y-0.5 transition-all duration-300">
                       <p className="text-slate-300 font-medium truncate">{point.name}</p>
                       <p className={`mt-1 font-semibold ${point.daysUntilDeadline < 0 ? 'text-red-400' : point.daysUntilDeadline < 3 ? 'text-amber-400' : 'text-emerald-400'}`}>
                         {point.daysUntilDeadline >= 0 ? `${point.daysUntilDeadline}d` : 'Overdue'}
@@ -285,7 +287,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         {/* Quick Actions */}
         <div className="group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 h-full flex flex-col transition-all duration-300 shadow-2xl">
+          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 h-full flex flex-col hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2.5 bg-emerald-500/20 rounded-lg">
                 <Zap className="w-5 h-5 text-emerald-400" />
@@ -324,7 +326,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       {analytics.currentGoal && (
         <div className="group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-purple-950/40 via-slate-900/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-6 transition-all duration-300 shadow-2xl hover:border-purple-500/50">
+          <div className="relative bg-gradient-to-br from-purple-950/40 via-slate-900/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-6 hover:shadow-purple-500/20 hover:-translate-y-1 transition-all duration-300 shadow-2xl hover:border-purple-500/50">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-purple-500/20 rounded-lg">
@@ -400,18 +402,6 @@ const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       )}
-
-      {/* Summary Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <SummaryCard label="Total Leads" value={leads.length + savedLeads.length} icon={<Users className="w-4 h-4" />} />
-        <SummaryCard label="Active Clients" value={clients.length} icon={<Briefcase className="w-4 h-4" />} />
-        <SummaryCard label="Completed" value={customers.length} icon={<Award className="w-4 h-4" />} />
-        <SummaryCard
-          label="Success Rate"
-          value={clients.length > 0 ? `${((customers.length / (clients.length + customers.length)) * 100).toFixed(0)}%` : '0%'}
-          icon={<TrendingUp className="w-4 h-4" />}
-        />
-      </div>
     </div>
   );
 };
@@ -425,10 +415,11 @@ const MetricCard: React.FC<{
   gradient: string;
   borderColor: string;
   accentColor: string;
-}> = ({ icon, label, value, trend, gradient, borderColor, accentColor }) => (
-  <div className="group relative">
+  colSpan?: string;
+}> = ({ icon, label, value, trend, gradient, borderColor, accentColor, colSpan }) => (
+  <div className={`group relative ${colSpan || ''}`}>
     <div className={`absolute inset-0 bg-gradient-to-br ${gradient} rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-    <div className={`relative bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl border ${borderColor} p-6 hover:border-slate-600/50 transition-all duration-300 shadow-xl group-hover:shadow-2xl`}>
+    <div className={`relative bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl border ${borderColor} p-6 hover:border-slate-600/50 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 shadow-xl group-hover:shadow-2xl`}>
       <div className="flex items-start justify-between mb-4">
         <div className={`p-3 rounded-lg bg-slate-900/50 border ${borderColor}`}>
           <div className={`${accentColor}`}>{icon}</div>
@@ -470,7 +461,7 @@ const SummaryCard: React.FC<{
 }> = ({ label, value, icon }) => (
   <div className="group relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 to-slate-800/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5 text-center hover:border-slate-600/50 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+    <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5 text-center hover:border-slate-600/50 hover:-translate-y-1 hover:shadow-slate-600/20 transition-all duration-300 shadow-lg group-hover:shadow-xl">
       <div className="flex justify-center mb-2 text-slate-400">{icon}</div>
       <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">{label}</p>
       <p className="text-2xl md:text-3xl font-bold mt-1 text-white">{value}</p>
