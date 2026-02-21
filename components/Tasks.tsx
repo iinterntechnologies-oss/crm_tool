@@ -258,9 +258,6 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <h3 className="text-white font-medium">{task.title}</h3>
-                      {task.description && (
-                        <p className="text-slate-400 text-sm mt-1">{task.description}</p>
-                      )}
                       <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
                         <span>{getRelatedName(task)}</span>
                         {task.dueDate && (
