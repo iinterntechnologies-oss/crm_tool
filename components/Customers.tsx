@@ -39,7 +39,7 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
     cancelEdit();
   };
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 animate-fade-in animate-slide-in">
       <div>
         <h2 className="text-2xl font-bold">Hall of Fame</h2>
         <p className="text-slate-400 mt-1">A portfolio of completed projects and long-term partners. Tracks recurring hosting renewals and maintenance contracts that provide steady agency income.</p>
@@ -96,24 +96,24 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
                       {editingId === customer.id ? (
                         <input
                           type="date"
-                          className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none"
+                          className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none font-mono"
                           value={draft?.completedDate || ''}
                           onChange={(e) => setDraft((prev) => prev ? { ...prev, completedDate: e.target.value } : prev)}
                         />
                       ) : (
-                        customer.completedDate
+                        <span className="font-mono">{customer.completedDate}</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
                       {editingId === customer.id ? (
                         <input
                           type="number"
-                          className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100 w-28 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none"
+                          className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100 w-28 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none font-mono"
                           value={draft?.totalPaid || ''}
                           onChange={(e) => setDraft((prev) => prev ? { ...prev, totalPaid: e.target.value } : prev)}
                         />
                       ) : (
-                        <div className="font-bold text-emerald-400">₹{customer.totalPaid.toLocaleString()}</div>
+                        <div className="font-bold font-mono text-emerald-400">₹{customer.totalPaid.toLocaleString()}</div>
                       )}
                     </td>
                     <td className="px-6 py-4 text-center">

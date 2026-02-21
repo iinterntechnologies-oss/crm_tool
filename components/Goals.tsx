@@ -44,7 +44,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
   const daysRemaining = Math.max(0, Math.ceil((new Date(goal.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 md:space-y-8 animate-fade-in animate-slide-in">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl md:text-2xl font-bold">North Star</h2>
@@ -109,7 +109,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
                 ) : (
                   <>
                     <p className="text-slate-400 text-xs md:text-sm font-medium mt-4">Remaining</p>
-                    <h3 className="text-4xl md:text-5xl font-black tracking-tight">
+                    <h3 className="text-4xl md:text-5xl font-black font-mono tracking-tight">
                       ₹{Math.max(0, goal.targetAmount - currentRevenue).toLocaleString()}
                     </h3>
                     <p className="text-sm md:text-base text-slate-300 mt-3 font-semibold">
@@ -143,7 +143,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
               <div className="flex justify-between items-end">
                 <div className="space-y-1">
                   <p className="text-slate-400 text-xs md:text-sm font-medium">Current Progress</p>
-                  <p className="text-2xl md:text-3xl font-bold text-blue-400">₹{currentRevenue.toLocaleString()}</p>
+                  <p className="text-2xl md:text-3xl font-bold font-mono text-blue-400">₹{currentRevenue.toLocaleString()}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-slate-400 text-xs md:text-sm font-medium">Percent</p>
@@ -166,7 +166,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
               </div>
               <div className="pt-4 text-right">
                 <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Goal Total</span>
-                <div className="text-xl md:text-2xl font-black text-slate-100">₹{goal.targetAmount.toLocaleString()}</div>
+                <div className="text-xl md:text-2xl font-black font-mono text-slate-100">₹{goal.targetAmount.toLocaleString()}</div>
               </div>
             </div>
           </div>
@@ -183,7 +183,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
                 </div>
                 <div>
                   <p className="text-slate-400 text-[10px] md:text-xs">To Achievement</p>
-                  <p className="text-lg md:text-xl font-bold">₹{Math.max(0, goal.targetAmount - currentRevenue).toLocaleString()}</p>
+                  <p className="text-lg md:text-xl font-bold font-mono">₹{Math.max(0, goal.targetAmount - currentRevenue).toLocaleString()}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3 md:space-x-4">
@@ -204,7 +204,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
                 <div>
                   <p className="text-slate-400 text-[10px] md:text-xs">Successful Clients</p>
                   <p className="text-lg md:text-xl font-bold">{successfulClients}</p>
-                  <p className="text-[10px] md:text-xs text-slate-500">₹{successfulRevenue.toLocaleString()}</p>
+                  <p className="text-[10px] md:text-xs text-slate-500 font-mono">₹{successfulRevenue.toLocaleString()}</p>
                 </div>
               </div>
             </div>
@@ -240,13 +240,13 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
                 {previousGoals.map((g) => (
                   <tr key={g.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-slate-100">₹{g.targetAmount.toLocaleString()}</div>
+                      <div className="font-bold font-mono text-slate-100">₹{g.targetAmount.toLocaleString()}</div>
                     </td>
-                    <td className="px-6 py-4 text-xs md:text-sm text-slate-400">
+                    <td className="px-6 py-4 text-xs md:text-sm text-slate-400 font-mono">
                       {new Date(g.dateStarted).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center text-emerald-400 font-medium text-xs md:text-sm">
+                      <div className="flex items-center text-emerald-400 font-medium text-xs md:text-sm font-mono">
                         <Check size={14} className="mr-2" />
                         {g.dateAchieved ? new Date(g.dateAchieved).toLocaleDateString() : 'N/A'}
                       </div>

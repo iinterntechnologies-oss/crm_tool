@@ -23,7 +23,7 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
   };
 
   return (
-    <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-4 md:space-y-6 animate-fade-in animate-slide-in">
       <div>
         <h2 className="text-xl md:text-2xl font-bold">Production</h2>
         <p className="text-slate-400 text-xs md:text-sm mt-1">The core workspace for active development. Monitor design, coding, and testing phases with real-time milestones and payment collection.</p>
@@ -68,17 +68,17 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
                         <div className="flex items-center text-slate-300">
                           <Calendar size={12} className="mr-2 text-slate-500 shrink-0" />
                           <span className="text-slate-500 w-16 md:w-20">Start:</span> 
-                          <span className="font-medium">{client.onboarding}</span>
+                          <span className="font-medium font-mono">{client.onboarding}</span>
                         </div>
                         <div className="flex items-center text-slate-300">
                           <Clock className="mr-2 text-slate-500 shrink-0" size={12} />
                           <span className="text-slate-500 w-16 md:w-20">Deadline:</span> 
-                          <span className="font-medium text-amber-400">{client.deadline}</span>
+                          <span className="font-medium font-mono text-amber-400">{client.deadline}</span>
                         </div>
                         <div className="flex items-center text-slate-300">
                           <ExternalLink className="mr-2 text-slate-500 shrink-0" size={12} />
                           <span className="text-slate-500 w-16 md:w-20">Delivery:</span> 
-                          <span className="font-medium">{client.delivery}</span>
+                          <span className="font-medium font-mono">{client.delivery}</span>
                         </div>
                         {client.projectStage && (
                           <div className="flex items-center text-slate-300 mt-2 pt-1.5 border-t border-slate-700">
@@ -92,7 +92,7 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <div className="text-base md:text-lg font-bold text-emerald-400">₹{client.paymentCollected.toLocaleString()}</div>
+                        <div className="text-base md:text-lg font-bold font-mono text-emerald-400">₹{client.paymentCollected.toLocaleString()}</div>
                         <div className="flex items-center mt-2">
                           <input 
                             type="number" 

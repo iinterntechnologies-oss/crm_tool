@@ -75,7 +75,7 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 animate-fade-in animate-slide-in">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Operations</h2>
@@ -247,7 +247,7 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
           filteredTasks.map((task, index) => (
             <div
               key={task.id}
-              className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-in fade-in slide-in-from-bottom-2"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-fade-in animate-slide-in"
               style={{ animationDelay: `${index * 30}ms` }}
             >
               <div className="flex items-start gap-4">

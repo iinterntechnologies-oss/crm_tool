@@ -29,7 +29,7 @@ const SavedLeadsPage: React.FC<SavedLeadsProps> = ({ leads, onConvert, onDelete 
   const getDatesForLead = (leadId: string) =>
     dateOverrides[leadId] || { startDate: today, finishDate: defaultFinish };
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 animate-fade-in animate-slide-in">
       <div>
         <h2 className="text-2xl font-bold">The Vault</h2>
         <p className="text-slate-400 mt-1">A curated library of qualified prospects and past inquiries. Nurture leads that aren't ready yet but represent significant future revenue potential.</p>

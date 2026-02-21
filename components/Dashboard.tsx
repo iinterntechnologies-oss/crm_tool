@@ -143,7 +143,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   const overdueProjects = chartData.filter(p => p.daysUntilDeadline < 0).length;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-fade-in animate-slide-in">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -344,7 +344,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <div>
                   <h3 className="text-lg font-semibold text-white tracking-tight">{analytics.currentGoal.title}</h3>
                   <p className="text-slate-400 text-sm">
-                    Target: ₹{analytics.currentGoal.targetAmount.toLocaleString()} by {new Date(analytics.currentGoal.deadline).toLocaleDateString()}
+                    Target: <span className="font-mono">₹{analytics.currentGoal.targetAmount.toLocaleString()}</span> by <span className="font-mono">{new Date(analytics.currentGoal.deadline).toLocaleDateString()}</span>
                   </p>
                 </div>
               </div>
@@ -362,7 +362,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-400">Progress</span>
-                <span className="text-white font-semibold">₹{analytics.totalRevenue.toLocaleString()} / ₹{analytics.currentGoal.targetAmount.toLocaleString()}</span>
+                <span className="text-white font-semibold font-mono">₹{analytics.totalRevenue.toLocaleString()} / ₹{analytics.currentGoal.targetAmount.toLocaleString()}</span>
               </div>
             </div>
             </div>
@@ -396,7 +396,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                         <div className="w-2 h-2 rounded-full bg-emerald-400" />
                         <p className="font-medium text-sm md:text-base truncate text-slate-100">{customer.businessName}</p>
                       </div>
-                      <p className="text-[10px] md:text-xs text-slate-500 mt-1">₹{customer.totalPaid.toLocaleString()} • {formattedDate}</p>
+                      <p className="text-[10px] md:text-xs text-slate-500 mt-1 font-mono">₹{customer.totalPaid.toLocaleString()} • {formattedDate}</p>
                     </div>
                     <button
                       onClick={() => onDeleteCustomer?.(customer.id)}
@@ -440,7 +440,7 @@ const MetricCard: React.FC<{
         <TrendingUp className={`w-4 h-4 ${accentColor} opacity-60 group-hover:opacity-100 transition-opacity`} />
       </div>
       <p className="text-slate-400 text-sm font-medium uppercase tracking-widest">{label}</p>
-      <p className="text-2xl md:text-3xl font-bold mt-2 text-white tracking-tight">{value}</p>
+      <p className="text-2xl md:text-3xl font-bold font-mono mt-2 text-white tracking-tight">{value}</p>
       <p className={`text-xs mt-2 ${accentColor} font-medium`}>{trend}</p>
       </div>
     </div>

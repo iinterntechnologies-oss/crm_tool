@@ -76,7 +76,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
   const maxRevenue = Math.max(...analytics.monthlyRevenue.map(m => m.revenue), 1);
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 animate-fade-in animate-slide-in">
       <div>
         <h2 className="text-2xl font-bold">Insights</h2>
         <p className="text-slate-400 text-sm mt-1">The data-driven engine for agency performance. Analyze profit margins, lead conversion rates, and average project completion time.</p>
@@ -92,7 +92,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
             <TrendingUp className="w-5 h-5 text-blue-400 group-hover:-translate-y-0.5 transition-transform duration-300" />
           </div>
           <p className="text-slate-400 text-sm">Total Revenue</p>
-          <p className="text-2xl font-bold text-white mt-1">₹{analytics.totalRevenue.toLocaleString()}</p>
+          <p className="text-2xl font-bold font-mono text-white mt-1">₹{analytics.totalRevenue.toLocaleString()}</p>
         </div>
 
         <div className="bg-linear-to-br from-emerald-500/10 to-teal-500/10 backdrop-blur-sm rounded-xl border border-emerald-500/20 p-6 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/20 group">
@@ -114,7 +114,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
             <TrendingUp className="w-5 h-5 text-purple-400 group-hover:-translate-y-0.5 transition-transform duration-300" />
           </div>
           <p className="text-slate-400 text-sm">Avg Project Value</p>
-          <p className="text-2xl font-bold text-white mt-1">₹{Number(analytics.avgProjectValue).toLocaleString()}</p>
+          <p className="text-2xl font-bold font-mono text-white mt-1">₹{Number(analytics.avgProjectValue).toLocaleString()}</p>
         </div>
 
         <div className="bg-linear-to-br from-amber-500/10 to-orange-500/10 backdrop-blur-sm rounded-xl border border-amber-500/20 p-6 hover:border-amber-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20 group">
@@ -198,8 +198,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
             <div>
               <h3 className="text-lg font-semibold">{analytics.currentGoal.title}</h3>
               <p className="text-slate-400 text-sm">
-                Target: ₹{analytics.currentGoal.targetAmount.toLocaleString()} by{' '}
-                {new Date(analytics.currentGoal.deadline).toLocaleDateString()}
+                Target: <span className="font-mono">₹{analytics.currentGoal.targetAmount.toLocaleString()}</span> by{' '}
+                <span className="font-mono">{new Date(analytics.currentGoal.deadline).toLocaleDateString()}</span>
               </p>
             </div>
           </div>
@@ -214,7 +214,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ clients, customers, leads, savedL
                 style={{ width: `${Math.min(Number(analytics.goalProgress), 100)}%` }}
               />
             </div>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-400 text-sm font-mono">
               ₹{analytics.totalRevenue.toLocaleString()} of ₹{analytics.currentGoal.targetAmount.toLocaleString()} achieved
             </p>
           </div>

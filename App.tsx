@@ -670,7 +670,7 @@ const App: React.FC = () => {
           onUpdateGoal={updateGoal}
         />
       ) : (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="space-y-6 animate-fade-in animate-slide-in">
           <div>
             <h2 className="text-2xl font-bold">Agency Goals</h2>
             <p className="text-slate-400 mt-1">Track your growth and celebrate your wins.</p>
@@ -780,7 +780,9 @@ const App: React.FC = () => {
                 Syncing CRM data...
               </div>
             )}
-            {renderPage()}
+            <div key={currentPage} className="animate-fade-in animate-slide-in">
+              {renderPage()}
+            </div>
           </div>
         </div>
       </main>

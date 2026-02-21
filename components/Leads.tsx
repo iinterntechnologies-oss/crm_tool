@@ -84,7 +84,7 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
   };
 
   return (
-    <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-4 md:space-y-6 animate-fade-in animate-slide-in">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
           <h2 className="text-xl md:text-2xl font-bold">Opportunities</h2>
@@ -119,7 +119,7 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAddLeadSubmit} className="relative bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300 overflow-hidden">
+        <form onSubmit={handleAddLeadSubmit} className="relative bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl animate-fade-in animate-slide-in-top overflow-hidden">
           <GlowingEffect disabled={false} blur={10} proximity={120} spread={26} glow />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input
