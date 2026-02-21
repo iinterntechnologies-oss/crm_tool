@@ -19,6 +19,12 @@ export interface Client {
   delivery: string;
   paymentCollected: number;
   isCompleted: boolean;
+  domainName?: string;
+  hostingProvider?: string;
+  cmsType?: string;
+  projectStage?: 'Discovery' | 'Design' | 'Development' | 'UAT' | 'Launched';
+  maintenancePlan?: boolean;
+  renewalDate?: string;
 }
 
 export interface Customer {
@@ -26,6 +32,11 @@ export interface Customer {
   businessName: string;
   completedDate: string;
   totalPaid: number;
+  domainName?: string;
+  hostingProvider?: string;
+  cmsType?: string;
+  maintenancePlan?: boolean;
+  renewalDate?: string;
 }
 
 export interface Goal {

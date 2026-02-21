@@ -256,7 +256,7 @@ const App: React.FC = () => {
     }
   };
 
-  const convertToClient = async (lead: Lead, dates?: { startDate?: string; finishDate?: string }) => {
+  const convertToClient = async (lead: Lead, dates?: { startDate?: string; finishDate?: string }, specs?: any) => {
     try {
       const token = requireToken();
       const startDate = dates?.startDate || new Date().toISOString().split('T')[0];
@@ -270,7 +270,13 @@ const App: React.FC = () => {
         deadline: finishDate,
         delivery: 'In Progress',
         paymentCollected: 0,
-        isCompleted: false
+        isCompleted: false,
+        domainName: specs?.domainName || undefined,
+        hostingProvider: specs?.hostingProvider || undefined,
+        cmsType: specs?.cmsType || undefined,
+        projectStage: specs?.projectStage || 'Discovery',
+        maintenancePlan: specs?.maintenancePlan || false,
+        renewalDate: specs?.renewalDate || undefined
       };
       await leadsApi.remove(lead.id, token);
       const createdClient = await clientsApi.create(newClient, token);

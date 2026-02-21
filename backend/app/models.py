@@ -1,8 +1,18 @@
 import uuid
 from datetime import date, datetime
-from sqlalchemy import Boolean, Date, DateTime, Float, String
+from enum import Enum
+from sqlalchemy import Boolean, Date, DateTime, Float, String, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column
 from .db import Base
+
+
+class ProjectStage(str, Enum):
+    """Enum for project stages in the development lifecycle"""
+    DISCOVERY = "Discovery"
+    DESIGN = "Design"
+    DEVELOPMENT = "Development"
+    UAT = "UAT"
+    LAUNCHED = "Launched"
 
 
 def _uuid() -> str:
@@ -40,6 +50,14 @@ class Client(Base):
     delivery: Mapped[str] = mapped_column(String(255))
     payment_collected: Mapped[float] = mapped_column(Float, default=0)
     is_completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    
+    # Technical specifications
+    domain_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    hosting_provider: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    cms_type: Mapped[str | None] = mapped_column(String(100), nullable=True)  # e.g., WordPress, Next.js, Headless
+    project_stage: Mapped[ProjectStage] = mapped_column(SQLEnum(ProjectStage), default=ProjectStage.DISCOVERY)
+    maintenance_plan: Mapped[bool] = mapped_column(Boolean, default=False)
+    renewal_date: Mapped[date | None] = mapped_column(Date, nullable=True)
 
 
 class Customer(Base):
@@ -49,6 +67,13 @@ class Customer(Base):
     business_name: Mapped[str] = mapped_column(String(255))
     completed_date: Mapped[date] = mapped_column(Date)
     total_paid: Mapped[float] = mapped_column(Float, default=0)
+    
+    # Technical specifications
+    domain_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    hosting_provider: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    cms_type: Mapped[str | None] = mapped_column(String(100), nullable=True)  # e.g., WordPress, Next.js, Headless
+    maintenance_plan: Mapped[bool] = mapped_column(Boolean, default=False)
+    renewal_date: Mapped[date | None] = mapped_column(Date, nullable=True)
 
 
 class Goal(Base):

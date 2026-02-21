@@ -1,16 +1,27 @@
 
 import React, { useState } from 'react';
-import { Bookmark, Rocket, Trash2, Phone } from 'lucide-react';
+import { Bookmark, Rocket, Trash2, Phone, ChevronDown, ChevronUp } from 'lucide-react';
 import { Lead } from '../types';
 
 interface SavedLeadsProps {
   leads: Lead[];
-  onConvert: (lead: Lead, dates?: { startDate?: string; finishDate?: string }) => void;
+  onConvert: (lead: Lead, dates?: { startDate?: string; finishDate?: string }, specs?: any) => void;
   onDelete: (id: string) => void;
 }
 
+interface TechSpecs {
+  domainName: string;
+  hostingProvider: string;
+  cmsType: string;
+  projectStage: string;
+  maintenancePlan: boolean;
+  renewalDate: string;
+}
+
 const SavedLeadsPage: React.FC<SavedLeadsProps> = ({ leads, onConvert, onDelete }) => {
-  const [dateOverrides, setDateOverrides] = useState<Record<string, { startDate: string; finishDate: string }>>({});
+  const [dateOverrides, setDateOverrides] = useState<{ [key: string]: { startDate: string; finishDate: string } }>({});
+  const [expandedSpecs, setExpandedSpecs] = useState<{ [key: string]: boolean }>({});
+  const [techSpecs, setTechSpecs] = useState<{ [key: string]: TechSpecs }>({});
 
   const today = new Date().toISOString().split('T')[0];
   const defaultFinish = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -79,9 +90,142 @@ const SavedLeadsPage: React.FC<SavedLeadsProps> = ({ leads, onConvert, onDelete 
                 </div>
               </div>
 
+              {/* Technical Specifications Section */}
+              <div className="mb-4 border-t border-slate-800 pt-4">
+                <button
+                  onClick={() => setExpandedSpecs(prev => ({ ...prev, [lead.id]: !prev[lead.id] }))}
+                  className="flex items-center justify-between w-full text-[10px] text-slate-400 uppercase tracking-wider hover:text-slate-300 transition-colors"
+                >
+                  <span>Technical Specifications</span>
+                  {expandedSpecs[lead.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+
+                {expandedSpecs[lead.id] && (
+                  <div className="grid grid-cols-1 gap-2 mt-3">
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">
+                      Domain Name
+                      <input
+                        type="text"
+                        placeholder="example.com"
+                        className="mt-1 w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100 placeholder-slate-600"
+                        value={techSpecs[lead.id]?.domainName || ''}
+                        onChange={(e) =>
+                          setTechSpecs(prev => ({
+                            ...prev,
+                            [lead.id]: { ...prev[lead.id] || {} as TechSpecs, domainName: e.target.value } as TechSpecs
+                          }))
+                        }
+                      />
+                    </label>
+
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">
+                      Hosting Provider
+                      <select
+                        className="mt-1 w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100"
+                        value={techSpecs[lead.id]?.hostingProvider || ''}
+                        onChange={(e) =>
+                          setTechSpecs(prev => ({
+                            ...prev,
+                            [lead.id]: { ...prev[lead.id] || {} as TechSpecs, hostingProvider: e.target.value } as TechSpecs
+                          }))
+                        }
+                      >
+                        <option value="">Select...</option>
+                        <option value="AWS">AWS</option>
+                        <option value="Vercel">Vercel</option>
+                        <option value="GoDaddy">GoDaddy</option>
+                        <option value="Bluehost">Bluehost</option>
+                        <option value="DigitalOcean">DigitalOcean</option>
+                        <option value="Heroku">Heroku</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </label>
+
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">
+                      CMS Type
+                      <select
+                        className="mt-1 w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100"
+                        value={techSpecs[lead.id]?.cmsType || ''}
+                        onChange={(e) =>
+                          setTechSpecs(prev => ({
+                            ...prev,
+                            [lead.id]: { ...prev[lead.id] || {} as TechSpecs, cmsType: e.target.value } as TechSpecs
+                          }))
+                        }
+                      >
+                        <option value="">Select...</option>
+                        <option value="WordPress">WordPress</option>
+                        <option value="Next.js">Next.js</option>
+                        <option value="Headless CMS">Headless CMS</option>
+                        <option value="Shopify">Shopify</option>
+                        <option value="Webflow">Webflow</option>
+                        <option value="Wix">Wix</option>
+                        <option value="Drupal">Drupal</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </label>
+
+                    <label className="text-[10px] text-slate-500 uppercase tracking-wider">
+                      Project Stage
+                      <select
+                        className="mt-1 w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100"
+                        value={techSpecs[lead.id]?.projectStage || 'Discovery'}
+                        onChange={(e) =>
+                          setTechSpecs(prev => ({
+                            ...prev,
+                            [lead.id]: { ...prev[lead.id] || {} as TechSpecs, projectStage: e.target.value } as TechSpecs
+                          }))
+                        }
+                      >
+                        <option value="Discovery">Discovery</option>
+                        <option value="Design">Design</option>
+                        <option value="Development">Development</option>
+                        <option value="UAT">UAT</option>
+                        <option value="Launched">Launched</option>
+                      </select>
+                    </label>
+
+                    <div className="flex items-center space-x-3 pt-2">
+                      <input
+                        type="checkbox"
+                        id={`maintenance-${lead.id}`}
+                        checked={techSpecs[lead.id]?.maintenancePlan || false}
+                        onChange={(e) =>
+                          setTechSpecs(prev => ({
+                            ...prev,
+                            [lead.id]: { ...prev[lead.id] || {} as TechSpecs, maintenancePlan: e.target.checked } as TechSpecs
+                          }))
+                        }
+                        className="rounded"
+                      />
+                      <label htmlFor={`maintenance-${lead.id}`} className="text-[10px] text-slate-500 uppercase tracking-wider cursor-pointer">
+                        Maintenance Plan
+                      </label>
+                    </div>
+
+                    {techSpecs[lead.id]?.maintenancePlan && (
+                      <label className="text-[10px] text-slate-500 uppercase tracking-wider">
+                        Renewal Date
+                        <input
+                          type="date"
+                          className="mt-1 w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-100"
+                          value={techSpecs[lead.id]?.renewalDate || ''}
+                          onChange={(e) =>
+                            setTechSpecs(prev => ({
+                              ...prev,
+                              [lead.id]: { ...prev[lead.id] || {} as TechSpecs, renewalDate: e.target.value } as TechSpecs
+                            }))
+                          }
+                        />
+                      </label>
+                    )}
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center space-x-3">
                 <button 
-                  onClick={() => onConvert(lead, getDatesForLead(lead.id))}
+                  onClick={() => onConvert(lead, getDatesForLead(lead.id), techSpecs[lead.id])}
                   className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-blue-900/30 hover:shadow-blue-500/40 hover:scale-[1.01] active:scale-[0.98]"
                 >
                   <Rocket size={16} />

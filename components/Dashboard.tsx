@@ -201,13 +201,13 @@ const Dashboard: React.FC<DashboardProps> = ({
           accentColor="text-amber-400"
         />
         <div className="md:col-span-2 group relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 flex flex-col hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/15 to-teal-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
+          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 flex flex-col hover:shadow-red-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-500/15 to-red-600/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2.5 bg-emerald-500/20 rounded-lg">
-                  <Zap className="w-5 h-5 text-emerald-400" />
+                <div className="p-2.5 bg-red-500/20 rounded-lg">
+                  <Zap className="w-5 h-5 text-red-400" />
                 </div>
                 <h3 className="text-lg font-semibold text-white tracking-tight">Quick Actions</h3>
               </div>

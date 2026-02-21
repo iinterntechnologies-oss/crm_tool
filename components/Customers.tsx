@@ -66,16 +66,30 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
                         <div className="h-8 w-8 bg-blue-500/10 rounded-full flex items-center justify-center border border-blue-500/20">
                           <ShieldCheck size={16} className="text-blue-400" />
                         </div>
-                        {editingId === customer.id ? (
-                          <input
-                            type="text"
-                            className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none"
-                            value={draft?.businessName || ''}
-                            onChange={(e) => setDraft((prev) => prev ? { ...prev, businessName: e.target.value } : prev)}
-                          />
-                        ) : (
-                          <span className="font-semibold">{customer.businessName}</span>
-                        )}
+                        <div className="flex-1">
+                          {editingId === customer.id ? (
+                            <input
+                              type="text"
+                              className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-sm text-slate-100 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none"
+                              value={draft?.businessName || ''}
+                              onChange={(e) => setDraft((prev) => prev ? { ...prev, businessName: e.target.value } : prev)}
+                            />
+                          ) : (
+                            <div>
+                              <div className="font-semibold">{customer.businessName}</div>
+                              {customer.cmsType && (
+                                <div className="text-[10px] text-slate-500">
+                                  {customer.cmsType}{customer.hostingProvider ? ` on ${customer.hostingProvider}` : ''}
+                                </div>
+                              )}
+                              {customer.maintenancePlan && (
+                                <div className="text-[10px] text-emerald-400 font-semibold">
+                                  ✓ Maintenance Plan
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-400">

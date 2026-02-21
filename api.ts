@@ -27,7 +27,13 @@ const toApiClient = (client: Partial<Client>) => ({
   deadline: client.deadline,
   delivery: client.delivery,
   payment_collected: client.paymentCollected ?? 0,
-  is_completed: client.isCompleted ?? false
+  is_completed: client.isCompleted ?? false,
+  domain_name: client.domainName ?? null,
+  hosting_provider: client.hostingProvider ?? null,
+  cms_type: client.cmsType ?? null,
+  project_stage: client.projectStage ?? 'Discovery',
+  maintenance_plan: client.maintenancePlan ?? false,
+  renewal_date: client.renewalDate ?? null
 });
 
 const fromApiClient = (client: any): Client => ({
@@ -39,20 +45,36 @@ const fromApiClient = (client: any): Client => ({
   deadline: client.deadline,
   delivery: client.delivery,
   paymentCollected: client.payment_collected ?? 0,
-  isCompleted: client.is_completed ?? false
+  isCompleted: client.is_completed ?? false,
+  domainName: client.domain_name ?? undefined,
+  hostingProvider: client.hosting_provider ?? undefined,
+  cmsType: client.cms_type ?? undefined,
+  projectStage: client.project_stage ?? 'Discovery',
+  maintenancePlan: client.maintenance_plan ?? false,
+  renewalDate: client.renewal_date ?? undefined
 });
 
 const toApiCustomer = (customer: Partial<Customer>) => ({
   business_name: customer.businessName,
   completed_date: customer.completedDate,
-  total_paid: customer.totalPaid ?? 0
+  total_paid: customer.totalPaid ?? 0,
+  domain_name: customer.domainName ?? null,
+  hosting_provider: customer.hostingProvider ?? null,
+  cms_type: customer.cmsType ?? null,
+  maintenance_plan: customer.maintenancePlan ?? false,
+  renewal_date: customer.renewalDate ?? null
 });
 
 const fromApiCustomer = (customer: any): Customer => ({
   id: customer.id,
   businessName: customer.business_name,
   completedDate: customer.completed_date,
-  totalPaid: customer.total_paid ?? 0
+  totalPaid: customer.total_paid ?? 0,
+  domainName: customer.domain_name ?? undefined,
+  hostingProvider: customer.hosting_provider ?? undefined,
+  cmsType: customer.cms_type ?? undefined,
+  maintenancePlan: customer.maintenance_plan ?? false,
+  renewalDate: customer.renewal_date ?? undefined
 });
 
 const toApiGoal = (goal: Partial<Goal>) => ({

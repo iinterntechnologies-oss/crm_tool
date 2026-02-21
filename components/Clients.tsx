@@ -52,6 +52,16 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
                       <div className="inline-flex items-center px-2 py-0.5 mt-1 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-tighter">
                         {client.businessType}
                       </div>
+                      {client.cmsType && (
+                        <div className="text-[9px] text-slate-400 mt-1">
+                          <span className="text-slate-600">CMS:</span> {client.cmsType}
+                        </div>
+                      )}
+                      {client.domainName && (
+                        <div className="text-[9px] text-slate-400">
+                          <span className="text-slate-600">Domain:</span> {client.domainName}
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <div className="space-y-1.5 text-[10px] md:text-xs">
@@ -70,6 +80,14 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
                           <span className="text-slate-500 w-16 md:w-20">Delivery:</span> 
                           <span className="font-medium">{client.delivery}</span>
                         </div>
+                        {client.projectStage && (
+                          <div className="flex items-center text-slate-300 mt-2 pt-1.5 border-t border-slate-700">
+                            <span className="text-slate-500 w-16 md:w-20 text-[10px]">Stage:</span>
+                            <span className="inline-block px-2 py-0.5 rounded text-[9px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                              {client.projectStage}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4">

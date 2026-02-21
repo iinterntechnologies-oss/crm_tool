@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from pydantic import BaseModel, EmailStr, field_validator
+from .models import ProjectStage
 
 
 class Token(BaseModel):
@@ -62,6 +63,13 @@ class ClientBase(BaseModel):
     delivery: str
     payment_collected: float = 0
     is_completed: bool = False
+    # Technical specifications
+    domain_name: str | None = None
+    hosting_provider: str | None = None
+    cms_type: str | None = None
+    project_stage: ProjectStage = ProjectStage.DISCOVERY
+    maintenance_plan: bool = False
+    renewal_date: date | None = None
 
 
 class ClientCreate(ClientBase):
@@ -77,6 +85,13 @@ class ClientUpdate(BaseModel):
     delivery: str | None = None
     payment_collected: float | None = None
     is_completed: bool | None = None
+    # Technical specifications
+    domain_name: str | None = None
+    hosting_provider: str | None = None
+    cms_type: str | None = None
+    project_stage: ProjectStage | None = None
+    maintenance_plan: bool | None = None
+    renewal_date: date | None = None
 
 
 class ClientOut(ClientBase):
@@ -90,6 +105,12 @@ class CustomerBase(BaseModel):
     business_name: str
     completed_date: date
     total_paid: float = 0
+    # Technical specifications
+    domain_name: str | None = None
+    hosting_provider: str | None = None
+    cms_type: str | None = None
+    maintenance_plan: bool = False
+    renewal_date: date | None = None
 
 
 class CustomerCreate(CustomerBase):
@@ -100,6 +121,12 @@ class CustomerUpdate(BaseModel):
     business_name: str | None = None
     completed_date: date | None = None
     total_paid: float | None = None
+    # Technical specifications
+    domain_name: str | None = None
+    hosting_provider: str | None = None
+    cms_type: str | None = None
+    maintenance_plan: bool | None = None
+    renewal_date: date | None = None
 
 
 class CustomerOut(CustomerBase):
