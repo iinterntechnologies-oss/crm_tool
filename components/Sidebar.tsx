@@ -9,7 +9,6 @@ import {
   CheckCircle,
   Menu,
   ChevronLeft,
-  Activity,
   ListTodo,
   BarChart3
 } from 'lucide-react';
@@ -30,7 +29,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
     { id: 'clients', label: 'Clients', icon: Briefcase },
     { id: 'goals', label: 'Goals', icon: Target },
     { id: 'customers', label: 'Success', icon: CheckCircle },
-    { id: 'activities', label: 'Activity', icon: Activity },
     { id: 'tasks', label: 'Tasks', icon: ListTodo },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   ];
@@ -61,15 +59,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
               <button
                 key={item.id}
                 onClick={() => onPageChange(item.id as PageType)}
-                className={`w-full flex items-center py-3 px-3 rounded-lg transition-all group ${
+                className={`w-full flex items-center py-3 px-3 rounded-lg transition-all group relative ${
                   isActive 
-                    ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' 
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
+                    ? 'bg-blue-500/10 backdrop-blur-sm text-blue-400 border-l-2 border-l-blue-400 shadow-lg shadow-blue-500/30' 
+                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 hover:backdrop-blur-sm'
                 }`}
               >
-                <Icon size={20} className={`shrink-0 ${isActive ? 'text-blue-400' : 'group-hover:text-slate-200'}`} />
+                <Icon size={20} className={`shrink-0 transition-all ${
+                  isActive 
+                    ? 'text-blue-400 drop-shadow-lg drop-shadow-blue-400/50' 
+                    : 'group-hover:text-slate-200'
+                }`} />
                 {isOpen && <span className="ml-3 font-medium text-sm whitespace-nowrap">{item.label}</span>}
-                {!isOpen && isActive && <div className="absolute left-1 w-1 h-8 bg-blue-500 rounded-full" />}
+                {!isOpen && isActive && <div className="absolute left-1 w-1 h-8 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50" />}
               </button>
             );
           })}
@@ -91,7 +93,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/80 backdrop-blur-xl border-t border-slate-800 flex items-center justify-around px-2 z-50">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/40 backdrop-blur-md border-t border-white/10 flex items-center justify-around px-2 z-50">
         {menuItems.slice(0, 5).map((item) => {
           const Icon = item.icon;
           const isActive = activePage === item.id;
@@ -99,13 +101,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
             <button
               key={item.id}
               onClick={() => onPageChange(item.id as PageType)}
-              className={`flex flex-col items-center justify-center space-y-1 flex-1 h-full transition-colors ${
-                isActive ? 'text-blue-400' : 'text-slate-500'
+              className={`flex flex-col items-center justify-center space-y-1 flex-1 h-full transition-all rounded-lg ${
+                isActive ? 'text-blue-400 bg-blue-500/10 backdrop-blur-sm' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <Icon size={20} />
+              <Icon size={20} className={isActive ? 'drop-shadow-lg drop-shadow-blue-400/50' : ''} />
               <span className="text-[10px] font-bold uppercase tracking-tighter">{item.label}</span>
-              {isActive && <div className="absolute bottom-1 w-1 h-1 bg-blue-400 rounded-full" />}
+              {isActive && <div className="absolute bottom-1 w-1 h-1 bg-blue-400 rounded-full shadow-lg shadow-blue-400/50" />}
             </button>
           );
         })}

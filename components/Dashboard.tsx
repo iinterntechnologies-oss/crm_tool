@@ -142,14 +142,14 @@ const Dashboard: React.FC<DashboardProps> = ({
   const overdueProjects = chartData.filter(p => p.daysUntilDeadline < 0).length;
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-            Dashboard
+            Command Center
           </h1>
-          <p className="text-slate-400 text-sm mt-2">Real-time business intelligence and performance metrics</p>
+          <p className="text-slate-400 text-sm mt-2">Unified analytics and actionable business intelligence</p>
         </div>
         {overdueProjects > 0 && (
           <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-full backdrop-blur-sm">
@@ -202,7 +202,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Active Projects - Large Card */}
         <div className="lg:col-span-2 group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
@@ -212,7 +212,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <Briefcase className="w-5 h-5 text-blue-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold">Active Projects</h3>
+                <h3 className="text-lg font-semibold text-white tracking-tight">Active Projects</h3>
                 <p className="text-slate-400 text-sm">{clients.length} ongoing</p>
               </div>
             </div>
@@ -292,7 +292,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               <div className="p-2.5 bg-emerald-500/20 rounded-lg">
                 <Zap className="w-5 h-5 text-emerald-400" />
               </div>
-              <h3 className="text-lg font-semibold">Quick Actions</h3>
+              <h3 className="text-lg font-semibold text-white tracking-tight">Quick Actions</h3>
             </div>
 
             <div className="space-y-3 flex-1 flex flex-col">
@@ -333,7 +333,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <Award className="w-5 h-5 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{analytics.currentGoal.title}</h3>
+                  <h3 className="text-lg font-semibold text-white tracking-tight">{analytics.currentGoal.title}</h3>
                   <p className="text-slate-400 text-sm">
                     Target: ₹{analytics.currentGoal.targetAmount.toLocaleString()} by {new Date(analytics.currentGoal.deadline).toLocaleDateString()}
                   </p>
@@ -427,7 +427,7 @@ const MetricCard: React.FC<{
         <TrendingUp className={`w-4 h-4 ${accentColor} opacity-60 group-hover:opacity-100 transition-opacity`} />
       </div>
       <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">{label}</p>
-      <p className="text-2xl md:text-3xl font-bold mt-2 text-white">{value}</p>
+      <p className="text-2xl md:text-3xl font-bold mt-2 text-white tracking-tight">{value}</p>
       <p className={`text-xs mt-2 ${accentColor} font-medium`}>{trend}</p>
     </div>
   </div>
@@ -461,10 +461,10 @@ const SummaryCard: React.FC<{
 }> = ({ label, value, icon }) => (
   <div className="group relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 to-slate-800/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-xl border border-slate-700/50 p-5 text-center hover:border-slate-600/50 hover:-translate-y-1 hover:shadow-slate-600/20 transition-all duration-300 shadow-lg group-hover:shadow-xl">
-      <div className="flex justify-center mb-2 text-slate-400">{icon}</div>
+    <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-xl border border-slate-700/50 p-6 text-center hover:border-slate-600/50 hover:-translate-y-1 hover:shadow-slate-600/20 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+      <div className="flex justify-center mb-3 text-slate-400">{icon}</div>
       <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">{label}</p>
-      <p className="text-2xl md:text-3xl font-bold mt-1 text-white">{value}</p>
+      <p className="text-2xl md:text-3xl font-bold mt-3 text-white tracking-tight">{value}</p>
     </div>
   </div>
 );

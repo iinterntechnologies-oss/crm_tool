@@ -1,5 +1,5 @@
 
-export type PageType = 'dashboard' | 'leads' | 'saved-leads' | 'clients' | 'goals' | 'customers' | 'activities' | 'tasks' | 'analytics';
+export type PageType = 'dashboard' | 'leads' | 'saved-leads' | 'clients' | 'goals' | 'customers' | 'tasks' | 'analytics';
 
 export interface Lead {
   id: string;

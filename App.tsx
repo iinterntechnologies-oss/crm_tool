@@ -12,7 +12,6 @@ import {
   Bell,
   Menu,
   X,
-  Activity,
   ListTodo,
   BarChart3
 } from 'lucide-react';
@@ -25,10 +24,9 @@ import ClientsPage from './components/Clients';
 import GoalsPage from './components/Goals';
 import CustomersPage from './components/Customers';
 import CelebrationOverlay from './components/CelebrationOverlay';
-import ActivityTimeline from './components/ActivityTimeline';
 import Tasks from './components/Tasks';
 import Analytics from './components/Analytics';
-import { authApi, clientsApi, customersApi, goalsApi, leadsApi, activitiesApi, tasksApi, notesApi } from './api';
+import { authApi, clientsApi, customersApi, goalsApi, leadsApi, tasksApi, notesApi } from './api';
 
 
 
@@ -50,7 +48,6 @@ const App: React.FC = () => {
   const [goal, setGoal] = useState<Goal | null>(null);
   const [previousGoals, setPreviousGoals] = useState<Goal[]>([]);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [activities, setActivities] = useState<ActivityType[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
 
@@ -89,12 +86,11 @@ const App: React.FC = () => {
   }, [errorMessage]);
 
   const loadAllData = async (activeToken: string) => {
-    const [loadedLeads, loadedClients, loadedCustomers, loadedGoals, loadedActivities, loadedTasks] = await Promise.all([
+    const [loadedLeads, loadedClients, loadedCustomers, loadedGoals, loadedTasks] = await Promise.all([
       leadsApi.list(activeToken),
       clientsApi.list(activeToken),
       customersApi.list(activeToken),
       goalsApi.list(activeToken),
-      activitiesApi.list(activeToken),
       tasksApi.list(activeToken)
     ]);
 
@@ -102,7 +98,6 @@ const App: React.FC = () => {
     setSavedLeads(loadedLeads.filter((lead) => lead.status === 'saved'));
     setClients(loadedClients);
     setCustomers(loadedCustomers);
-    setActivities(loadedActivities);
     setTasks(loadedTasks);
 
     if (loadedGoals.length > 0) {
@@ -442,43 +437,6 @@ const App: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  // Activity handlers
-  const createActivity = async (activity: Partial<ActivityType>) => {
-    try {
-      const created = await activitiesApi.create(activity, requireToken());
-      setActivities(prev => [created, ...prev]);
-      setErrorMessage('');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to create activity';
-      console.error('Create activity error:', error);
-      setErrorMessage(message);
-    }
-  };
-
-  const refreshActivities = async () => {
-    try {
-      const loadedActivities = await activitiesApi.list(requireToken());
-      setActivities(loadedActivities);
-      setErrorMessage('');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to refresh activities';
-      console.error('Refresh activities error:', error);
-      setErrorMessage(message);
-    }
-  };
-
-  const deleteActivity = async (id: string) => {
-    try {
-      await activitiesApi.remove(id, requireToken());
-      setActivities(prev => prev.filter(activity => activity.id !== id));
-      setErrorMessage('');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to delete activity';
-      console.error('Delete activity error:', error);
-      setErrorMessage(message);
-    }
-  };
-
   // Task handlers
   const createTask = async (task: Omit<Task, 'id' | 'createdAt' | 'completedAt'>) => {
     try {
@@ -665,13 +623,6 @@ const App: React.FC = () => {
           onDownloadReport={downloadCustomerReport}
           onDeleteCustomer={deleteCustomer}
           onUpdateCustomer={updateCustomer}
-        />
-      );
-      case 'activities': return (
-        <ActivityTimeline
-          activities={activities}
-          onRefresh={refreshActivities}
-          onDelete={deleteActivity}
         />
       );
       case 'tasks': return (
