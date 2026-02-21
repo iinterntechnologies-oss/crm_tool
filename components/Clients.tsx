@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Briefcase, CreditCard, CheckCircle, Calendar, ExternalLink, Clock, Trash2 } from 'lucide-react';
 import { Client } from '../types';
+import { GlowingEffect } from './ui/glowing-effect';
 
 interface ClientsPageProps {
   clients: Client[];
@@ -28,7 +29,8 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
         <p className="text-slate-400 text-xs md:text-sm mt-1">Track project progress and revenue.</p>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+        <GlowingEffect disabled={false} blur={12} proximity={140} spread={28} glow />
         {clients.length > 0 ? (
           <div className="overflow-x-auto scrollbar-hide relative">
             <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-950/50 to-transparent pointer-events-none" />

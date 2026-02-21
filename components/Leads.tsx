@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FileSpreadsheet, Trash2, CheckCircle2, MessageSquare, Plus, Users } from 'lucide-react';
 import { Lead } from '../types';
+import { GlowingEffect } from './ui/glowing-effect';
 
 interface LeadsPageProps {
   leads: Lead[];
@@ -118,7 +119,8 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAddLeadSubmit} className="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+        <form onSubmit={handleAddLeadSubmit} className="relative bg-slate-900/70 backdrop-blur border border-slate-800 rounded-2xl p-4 md:p-6 space-y-4 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300 overflow-hidden">
+          <GlowingEffect disabled={false} blur={10} proximity={120} spread={26} glow />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input
               type="text"
@@ -163,7 +165,8 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
         </form>
       )}
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+        <GlowingEffect disabled={false} blur={12} proximity={140} spread={28} glow />
         {leads.length > 0 ? (
           <div className="overflow-x-auto scrollbar-hide relative group">
             {/* Visual indicator for horizontal scroll on mobile */}

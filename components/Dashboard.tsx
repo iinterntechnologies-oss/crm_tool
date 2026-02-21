@@ -16,6 +16,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Stats, Client, Customer, Lead, Goal } from '../types';
+import { GlowingEffect } from './ui/glowing-effect';
 
 interface DashboardProps {
   stats: Stats;
@@ -206,7 +207,9 @@ const Dashboard: React.FC<DashboardProps> = ({
         {/* Active Projects - Large Card */}
         <div className="lg:col-span-2 group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 hover:border-slate-600/50 hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl">
+          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 hover:border-slate-600/50 hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-cyan-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2.5 bg-blue-500/20 rounded-lg">
                 <Briefcase className="w-5 h-5 text-blue-400" />
@@ -234,6 +237,10 @@ const Dashboard: React.FC<DashboardProps> = ({
                         <stop offset="0%" stopColor="#06b6d4" />
                         <stop offset="100%" stopColor="#3b82f6" />
                       </linearGradient>
+                      <linearGradient id="progressFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.25" />
+                        <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
+                      </linearGradient>
                       <filter id="glow">
                         <feGaussianBlur stdDeviation="2" result="coloredBlur" />
                         <feMerge>
@@ -242,6 +249,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                         </feMerge>
                       </filter>
                     </defs>
+                    <polygon
+                      points={`${chartPoints} ${chartWidth},${chartHeight} 0,${chartHeight}`}
+                      fill="url(#progressFill)"
+                      opacity="0.9"
+                    />
                     <polyline
                       fill="none"
                       stroke="url(#progressGradient)"
@@ -281,13 +293,16 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <p className="text-sm">No active projects. Convert leads to get started.</p>
               </div>
             )}
+            </div>
           </div>
         </div>
 
         {/* Quick Actions */}
         <div className="group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 h-full flex flex-col hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl">
+          <div className="relative bg-gradient-to-br from-slate-900/80 via-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 h-full flex flex-col hover:shadow-emerald-500/10 hover:-translate-y-1 transition-all duration-300 shadow-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/15 to-teal-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2.5 bg-emerald-500/20 rounded-lg">
                 <Zap className="w-5 h-5 text-emerald-400" />
@@ -318,6 +333,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 hoverGradient="from-purple-500 to-purple-400"
               />
             </div>
+            </div>
           </div>
         </div>
       </div>
@@ -326,7 +342,9 @@ const Dashboard: React.FC<DashboardProps> = ({
       {analytics.currentGoal && (
         <div className="group relative">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300" />
-          <div className="relative bg-gradient-to-br from-purple-950/40 via-slate-900/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-6 hover:shadow-purple-500/20 hover:-translate-y-1 transition-all duration-300 shadow-2xl hover:border-purple-500/50">
+          <div className="relative bg-gradient-to-br from-purple-950/40 via-slate-900/80 to-slate-900/80 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-6 hover:shadow-purple-500/20 hover:-translate-y-1 transition-all duration-300 shadow-2xl hover:border-purple-500/50 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/15 via-pink-500/10 to-rose-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-purple-500/20 rounded-lg">
@@ -355,6 +373,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <span className="text-slate-400">Progress</span>
                 <span className="text-white font-semibold">₹{analytics.totalRevenue.toLocaleString()} / ₹{analytics.currentGoal.targetAmount.toLocaleString()}</span>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -419,7 +438,10 @@ const MetricCard: React.FC<{
 }> = ({ icon, label, value, trend, gradient, borderColor, accentColor, colSpan }) => (
   <div className={`group relative ${colSpan || ''}`}>
     <div className={`absolute inset-0 bg-gradient-to-br ${gradient} rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-    <div className={`relative bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl border ${borderColor} p-6 hover:border-slate-600/50 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 shadow-xl group-hover:shadow-2xl`}>
+    <div className={`relative bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl rounded-2xl border ${borderColor} p-6 hover:border-slate-600/50 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 shadow-xl group-hover:shadow-2xl overflow-hidden`}>
+      <GlowingEffect disabled={false} blur={12} proximity={120} spread={28} glow />
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+      <div className="relative">
       <div className="flex items-start justify-between mb-4">
         <div className={`p-3 rounded-lg bg-slate-900/50 border ${borderColor}`}>
           <div className={`${accentColor}`}>{icon}</div>
@@ -429,6 +451,7 @@ const MetricCard: React.FC<{
       <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">{label}</p>
       <p className="text-2xl md:text-3xl font-bold mt-2 text-white tracking-tight">{value}</p>
       <p className={`text-xs mt-2 ${accentColor} font-medium`}>{trend}</p>
+      </div>
     </div>
   </div>
 );

@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
         }`}
       >
         <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800 bg-slate-950/20">
-          {isOpen && <h1 className="text-xl font-bold bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Pulse</h1>}
+          {isOpen && <h1 className="text-xl font-bold bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Command Center</h1>}
           <button 
             onClick={onToggle}
             className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
@@ -61,13 +61,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
                 onClick={() => onPageChange(item.id as PageType)}
                 className={`w-full flex items-center py-3 px-3 rounded-lg transition-all group relative ${
                   isActive 
-                    ? 'bg-blue-500/10 backdrop-blur-sm text-blue-400 border-l-2 border-l-blue-400 shadow-lg shadow-blue-500/30' 
+                    ? 'bg-blue-500/10 backdrop-blur-sm text-blue-400 shadow-lg shadow-blue-500/50' 
                     : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 hover:backdrop-blur-sm'
                 }`}
               >
                 <Icon size={20} className={`shrink-0 transition-all ${
                   isActive 
-                    ? 'text-blue-400 drop-shadow-lg drop-shadow-blue-400/50' 
+                    ? 'text-blue-400 drop-shadow-lg drop-shadow-blue-400/50 scale-105' 
                     : 'group-hover:text-slate-200'
                 }`} />
                 {isOpen && <span className="ml-3 font-medium text-sm whitespace-nowrap">{item.label}</span>}

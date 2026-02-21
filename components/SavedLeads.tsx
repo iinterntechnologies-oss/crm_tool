@@ -27,7 +27,7 @@ const SavedLeadsPage: React.FC<SavedLeadsProps> = ({ leads, onConvert, onDelete 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {leads.length > 0 ? (
           leads.map((lead) => (
-            <div key={lead.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-blue-500/30 transition-all duration-300 relative overflow-hidden group shadow-xl hover:shadow-blue-500/10">
+            <div key={lead.id} className="bg-space-900/40 border border-space-800/50 rounded-2xl p-6 hover:border-blue-500/30 transition-all duration-300 relative overflow-hidden group shadow-xl hover:shadow-blue-500/10\">
               <div className="absolute top-0 right-0 p-3">
                 <Bookmark className="h-5 w-5 text-blue-500 fill-blue-500/20" />
               </div>
