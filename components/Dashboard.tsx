@@ -148,9 +148,9 @@ const Dashboard: React.FC<DashboardProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tighter bg-linear-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
-            Command Center
+            Forge
           </h1>
-          <p className="text-slate-400 text-sm mt-2">Unified analytics and actionable business intelligence</p>
+          <p className="text-slate-400 text-sm mt-2">The central nerve center for your agency. High-level view of active project health, total revenue, and upcoming launch deadlines.</p>
         </div>
         {overdueProjects > 0 && (
           <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-full backdrop-blur-sm">

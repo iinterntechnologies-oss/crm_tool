@@ -25,8 +25,8 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
   return (
     <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-xl md:text-2xl font-bold">Active Clients</h2>
-        <p className="text-slate-400 text-xs md:text-sm mt-1">Track project progress and revenue.</p>
+        <h2 className="text-xl md:text-2xl font-bold">Production</h2>
+        <p className="text-slate-400 text-xs md:text-sm mt-1\">The core workspace for active development. Monitor design, coding, and testing phases with real-time milestones and payment collection.</p>
       </div>
 
       <div className="relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">

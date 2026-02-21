@@ -23,14 +23,14 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onToggle }) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'leads', label: 'Leads', icon: Users },
-    { id: 'saved-leads', label: 'Saved', icon: Bookmark },
-    { id: 'clients', label: 'Clients', icon: Briefcase },
-    { id: 'goals', label: 'Goals', icon: Target },
-    { id: 'customers', label: 'Success', icon: CheckCircle },
-    { id: 'tasks', label: 'Tasks', icon: ListTodo },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'dashboard', label: 'Forge', icon: LayoutDashboard },
+    { id: 'leads', label: 'Opportunities', icon: Users },
+    { id: 'saved-leads', label: 'The Vault', icon: Bookmark },
+    { id: 'clients', label: 'Production', icon: Briefcase },
+    { id: 'goals', label: 'North Star', icon: Target },
+    { id: 'customers', label: 'Hall of Fame', icon: CheckCircle },
+    { id: 'tasks', label: 'Operations', icon: ListTodo },
+    { id: 'analytics', label: 'Insights', icon: BarChart3 },
   ];
 
   return (
@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
         }`}
       >
         <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800 bg-slate-950/20">
-          {isOpen && <h1 className="text-xl font-bold bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Command Center</h1>}
+          {isOpen && <h1 className="text-xl font-bold bg-linear-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Pulse CRM</h1>}
           <button 
             onClick={onToggle}
             className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"

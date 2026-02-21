@@ -87,8 +87,8 @@ const LeadsPage: React.FC<LeadsPageProps> = ({
     <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold">Leads</h2>
-          <p className="text-slate-400 text-xs md:text-sm mt-1">Qualify your potential opportunities.</p>
+          <h2 className="text-xl md:text-2xl font-bold">Opportunities</h2>
+          <p className="text-slate-400 text-xs md:text-sm mt-1">Your prospecting engine for high-ticket web projects. Track potential clients from initial contact through the discovery phase.</p>
         </div>
         <div className="flex space-x-2 md:space-x-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-hide">
           <input 

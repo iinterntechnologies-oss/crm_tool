@@ -41,8 +41,8 @@ const CustomersPage: React.FC<CustomersPageProps> = ({ customers, onDownloadRepo
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-2xl font-bold">Success Stories</h2>
-        <p className="text-slate-400 mt-1">Clients who have successfully completed projects with us.</p>
+        <h2 className="text-2xl font-bold">Hall of Fame</h2>
+        <p className="text-slate-400 mt-1">A portfolio of completed projects and long-term partners. Tracks recurring hosting renewals and maintenance contracts that provide steady agency income.</p>
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">

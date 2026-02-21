@@ -78,8 +78,8 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Task Management</h2>
-          <p className="text-slate-400 text-sm mt-1">Organize and track your tasks</p>
+          <h2 className="text-2xl font-bold">Operations</h2>
+          <p className="text-slate-400 text-sm mt-1">The granular daily workflow manager. Organize developer tickets, UI/UX revisions, and client feedback loops.</p>
         </div>
         <button
           onClick={() => setShowAddTask(true)}

@@ -47,8 +47,8 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold">Agency Goals</h2>
-          <p className="text-slate-400 text-sm md:text-base mt-1">Track your growth and celebrate your wins.</p>
+          <h2 className="text-xl md:text-2xl font-bold">North Star</h2>
+          <p className="text-slate-400 text-sm md:text-base mt-1">Your agency's growth tracker. Set ambitious revenue targets, monitor successful client acquisitions, and visualize your progress toward scaling.</p>
         </div>
       </div>
 

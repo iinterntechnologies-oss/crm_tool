@@ -31,8 +31,8 @@ const SavedLeadsPage: React.FC<SavedLeadsProps> = ({ leads, onConvert, onDelete 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h2 className="text-2xl font-bold">Saved Leads</h2>
-        <p className="text-slate-400 mt-1">Leads that are ready for conversion or outreach.</p>
+        <h2 className="text-2xl font-bold">The Vault</h2>
+        <p className="text-slate-400 mt-1">A curated library of qualified prospects and past inquiries. Nurture leads that aren't ready yet but represent significant future revenue potential.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
