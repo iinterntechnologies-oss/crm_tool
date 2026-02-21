@@ -227,7 +227,7 @@ const GoalsPage: React.FC<GoalsPageProps> = ({ goal, currentRevenue, successfulC
 
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl hover:border-slate-700 transition-all duration-300">
           <div className="overflow-x-auto scrollbar-hide">
-            <table className="w-full text-left min-w-[600px]">
+            <table className="w-full text-left min-w-150">
               <thead>
                 <tr className="bg-slate-800/50 text-slate-400 text-[10px] md:text-xs uppercase tracking-wider">
                   <th className="px-6 py-4 font-semibold">Goal Target</th>

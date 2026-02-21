@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, activePage, onPageChange, onT
 
         <div className="p-4 border-t border-slate-800">
           <div className={`flex items-center ${isOpen ? 'space-x-3' : 'justify-center'}`}>
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 border border-slate-700 flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-full bg-linear-to-br from-blue-500 to-cyan-500 border border-slate-700 flex items-center justify-center shrink-0">
               <span className="text-xs font-bold text-white">CRM</span>
             </div>
             {isOpen && (

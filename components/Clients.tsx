@@ -33,9 +33,9 @@ const ClientsPage: React.FC<ClientsPageProps> = ({ clients, onUpdatePayment, onM
         <GlowingEffect disabled={false} blur={12} proximity={140} spread={28} glow />
         {clients.length > 0 ? (
           <div className="overflow-x-auto scrollbar-hide relative">
-            <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-950/50 to-transparent pointer-events-none" />
+            <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-slate-950/50 to-transparent pointer-events-none" />
             
-            <table className="w-full text-left min-w-[850px]">
+            <table className="w-full text-left min-w-212.5">
               <thead>
                 <tr className="bg-slate-800/50 text-slate-400 text-[10px] md:text-xs uppercase tracking-wider">
                   <th className="px-6 py-4 font-semibold">Project & Client</th>

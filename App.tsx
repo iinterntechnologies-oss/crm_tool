@@ -761,7 +761,7 @@ const App: React.FC = () => {
               <Bell className="h-5 w-5" />
               <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-blue-500 rounded-full border-2 border-slate-900"></span>
             </button>
-            <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-800 shadow-lg shrink-0">
+            <div className="h-8 w-8 bg-linear-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-800 shadow-lg shrink-0">
               CRM
             </div>
           </div>

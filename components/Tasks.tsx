@@ -247,7 +247,7 @@ const Tasks: React.FC<TasksProps> = ({ tasks, clients, leads, onCreateTask, onUp
           filteredTasks.map((task, index) => (
             <div
               key={task.id}
-              className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-in fade-in slide-in-from-bottom-2 duration-300"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover:border-slate-600/50 hover:bg-slate-800/70 transition-all duration-300 hover:shadow-lg hover:shadow-slate-900/40 animate-in fade-in slide-in-from-bottom-2"
               style={{ animationDelay: `${index * 30}ms` }}
             >
               <div className="flex items-start gap-4">
