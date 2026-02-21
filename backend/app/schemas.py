@@ -9,8 +9,19 @@ class Token(BaseModel):
 
 
 class UserCreate(BaseModel):
-    email: EmailStr
+    email: str  # Changed from EmailStr to str for flexibility with .local domains
     password: str
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str) -> str:
+        # Simple email validation that accepts .local domains
+        if "@" not in value or not value.count("@") == 1:
+            raise ValueError("Invalid email format")
+        local, domain = value.split("@")
+        if not local or not domain or "." not in domain:
+            raise ValueError("Invalid email format: domain must have at least one dot")
+        return value
 
     @field_validator("password")
     @classmethod
