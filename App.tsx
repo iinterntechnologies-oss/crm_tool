@@ -28,6 +28,20 @@ import Tasks from './components/Tasks';
 import Analytics from './components/Analytics';
 import { authApi, clientsApi, customersApi, goalsApi, leadsApi, tasksApi, notesApi } from './api';
 
+/**
+ * JWT Authentication Configuration
+ * 
+ * The app uses JWT tokens for API authentication. Credentials are read from environment variables:
+ * - VITE_DEMO_EMAIL: Username/email for logins (default: demo@pulse.app)
+ * - VITE_DEMO_PASSWORD: Password (default: demo1234)
+ * 
+ * On startup, the app attempts to login with these credentials.
+ * If the user doesn't exist, it will auto-register them first.
+ * 
+ * To customize credentials, update the .env file in the root directory.
+ * See JWT_AUTH_SETUP.md for detailed configuration instructions.
+ */
+
 
 
 const App: React.FC = () => {
@@ -111,19 +125,44 @@ const App: React.FC = () => {
     const initialize = async () => {
       try {
         setIsLoading(true);
+        
+        // Log authentication attempt
+        console.log('🔐 Attempting authentication...');
+        console.log(`   Email: ${demoEmail}`);
+        
         let activeToken: string;
         try {
+          console.log('   Logging in with existing credentials...');
           activeToken = await authApi.login(demoEmail, demoPassword);
-        } catch (error) {
-          await authApi.register(demoEmail, demoPassword);
-          activeToken = await authApi.login(demoEmail, demoPassword);
+          console.log('✅ Login successful');
+        } catch (loginError) {
+          console.log('   User not found, attempting registration...');
+          try {
+            await authApi.register(demoEmail, demoPassword);
+            console.log('✅ Registration successful');
+            activeToken = await authApi.login(demoEmail, demoPassword);
+            console.log('✅ Login after registration successful');
+          } catch (error) {
+            throw error;
+          }
         }
+        
         setToken(activeToken);
         await loadAllData(activeToken);
         setErrorMessage('');
+        console.log('✅ Application initialized successfully');
       } catch (error) {
-        console.error('Initialization error:', error);
-        setErrorMessage('Unable to connect to the API. Check the backend and database settings.');
+        console.error('❌ Initialization error:', error);
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        
+        // Provide helpful error messages
+        if (errorMsg.includes('connect') || errorMsg.includes('fetch')) {
+          setErrorMessage('⚠️ Cannot connect to API. Is the backend running on http://localhost:8000? Check VITE_API_BASE_URL in .env');
+        } else if (errorMsg.includes('password') || errorMsg.includes('401') || errorMsg.includes('credentials')) {
+          setErrorMessage('⚠️ Invalid credentials. Check VITE_DEMO_EMAIL and VITE_DEMO_PASSWORD in .env file');
+        } else {
+          setErrorMessage('⚠️ Unable to connect to the API. Check the backend and database settings. See console for details.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -722,8 +761,8 @@ const App: React.FC = () => {
               <Bell className="h-5 w-5" />
               <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-blue-500 rounded-full border-2 border-slate-900"></span>
             </button>
-            <div className="h-8 w-8 bg-linear-to-tr from-blue-600 to-cyan-400 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-800 shadow-lg shrink-0">
-              JS
+            <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-xs font-bold border-2 border-slate-800 shadow-lg shrink-0">
+              CRM
             </div>
           </div>
         </header>
