@@ -1,8 +1,9 @@
 import uuid
 from datetime import date, datetime
 from enum import Enum
-from sqlalchemy import Boolean, Date, DateTime, Float, String, Enum as SQLEnum
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import Optional
+from sqlalchemy import Boolean, Date, DateTime, Float, String, Enum as SQLEnum, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .db import Base
 
 
@@ -42,6 +43,10 @@ class Lead(Base):
     contact: Mapped[str] = mapped_column(String(255))
     comment: Mapped[str] = mapped_column(String(500), default="")
     status: Mapped[LeadStatus] = mapped_column(SQLEnum(LeadStatus), default=LeadStatus.NEW)
+    
+    # Relationships (cascade delete to avoid orphan rows)
+    tasks: Mapped[list["Task"]] = relationship("Task", back_populates="lead", cascade="all, delete-orphan")
+    notes: Mapped[list["Note"]] = relationship("Note", back_populates="lead", cascade="all, delete-orphan")
 
 
 class Client(Base):
@@ -64,6 +69,10 @@ class Client(Base):
     project_stage: Mapped[ProjectStage] = mapped_column(SQLEnum(ProjectStage), default=ProjectStage.DISCOVERY)
     maintenance_plan: Mapped[bool] = mapped_column(Boolean, default=False)
     renewal_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    
+    # Relationships (cascade delete to avoid orphan rows)
+    tasks: Mapped[list["Task"]] = relationship("Task", back_populates="client", cascade="all, delete-orphan")
+    notes: Mapped[list["Note"]] = relationship("Note", back_populates="client", cascade="all, delete-orphan")
 
 
 class Customer(Base):
@@ -105,6 +114,13 @@ class Activity(Base):
     description: Mapped[str] = mapped_column(String(500))
     activity_metadata: Mapped[str] = mapped_column(String(1000), default="{}")  # JSON string for additional data
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+    
+    # Foreign keys for referential integrity (polymorphic - only one will be populated based on entity_type)
+    lead_id: Mapped[str | None] = mapped_column(ForeignKey("leads.id", ondelete="CASCADE"), nullable=True)
+    client_id: Mapped[str | None] = mapped_column(ForeignKey("clients.id", ondelete="CASCADE"), nullable=True)
+    goal_id: Mapped[str | None] = mapped_column(ForeignKey("goals.id", ondelete="CASCADE"), nullable=True)
+    task_id: Mapped[str | None] = mapped_column(ForeignKey("tasks.id", ondelete="CASCADE"), nullable=True)
+    customer_id: Mapped[str | None] = mapped_column(ForeignKey("customers.id", ondelete="CASCADE"), nullable=True)
 
 
 class Task(Base):
@@ -115,15 +131,25 @@ class Task(Base):
     description: Mapped[str] = mapped_column(String(1000), default="")
     related_to: Mapped[str] = mapped_column(String(20))  # client, lead, general
     related_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    
+    # Foreign keys for referential integrity
+    client_id: Mapped[str | None] = mapped_column(ForeignKey("clients.id", ondelete="CASCADE"), nullable=True)
+    lead_id: Mapped[str | None] = mapped_column(ForeignKey("leads.id", ondelete="CASCADE"), nullable=True)
+    
     priority: Mapped[str] = mapped_column(String(20), default="medium")  # low, medium, high, urgent
     status: Mapped[str] = mapped_column(String(20), default="pending")  # pending, in_progress, completed, cancelled
     due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    
     # Task Template Support
     task_template: Mapped[str | None] = mapped_column(String(50), nullable=True)  # e.g., 'onboarding', 'development_checklist'
     service_type: Mapped[str | None] = mapped_column(String(50), nullable=True)  # e.g., 'full_development', 'seo', 'maintenance'
     is_template: Mapped[bool] = mapped_column(Boolean, default=False)
+    
+    # Relationships
+    client: Mapped[Optional["Client"]] = relationship("Client", back_populates="tasks", foreign_keys=[client_id])
+    lead: Mapped[Optional["Lead"]] = relationship("Lead", back_populates="tasks", foreign_keys=[lead_id])
 
 
 class Note(Base):
@@ -133,6 +159,15 @@ class Note(Base):
     content: Mapped[str] = mapped_column(String(2000))
     related_to: Mapped[str] = mapped_column(String(20))  # lead, client
     related_id: Mapped[str] = mapped_column(String(36))
+    
+    # Foreign keys for referential integrity
+    client_id: Mapped[str | None] = mapped_column(ForeignKey("clients.id", ondelete="CASCADE"), nullable=True)
+    lead_id: Mapped[str | None] = mapped_column(ForeignKey("leads.id", ondelete="CASCADE"), nullable=True)
+    
     is_pinned: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    client: Mapped[Optional["Client"]] = relationship("Client", back_populates="notes", foreign_keys=[client_id])
+    lead: Mapped[Optional["Lead"]] = relationship("Lead", back_populates="notes", foreign_keys=[lead_id])

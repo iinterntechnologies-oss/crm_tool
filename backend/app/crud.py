@@ -164,7 +164,15 @@ def get_task_by_id(db: Session, task_id: str):
 
 
 def create_task(db: Session, payload):
-    task = models.Task(**payload.model_dump())
+    task_data = payload.model_dump()
+    task = models.Task(**task_data)
+    
+    # Set appropriate ForeignKey based on related_to field
+    if task.related_to == "client" and task.related_id:
+        task.client_id = task.related_id
+    elif task.related_to == "lead" and task.related_id:
+        task.lead_id = task.related_id
+    
     db.add(task)
     db.commit()
     db.refresh(task)
@@ -174,6 +182,16 @@ def create_task(db: Session, payload):
 def update_task(db: Session, task: models.Task, payload):
     for key, value in payload.model_dump(exclude_unset=True).items():
         setattr(task, key, value)
+    
+    # Update ForeignKey columns if related_to or related_id changed
+    if "related_to" in payload.model_dump() or "related_id" in payload.model_dump():
+        task.client_id = None
+        task.lead_id = None
+        if task.related_to == "client" and task.related_id:
+            task.client_id = task.related_id
+        elif task.related_to == "lead" and task.related_id:
+            task.lead_id = task.related_id
+    
     db.commit()
     db.refresh(task)
     return task
@@ -205,7 +223,15 @@ def get_note_by_id(db: Session, note_id: str):
 
 
 def create_note(db: Session, payload):
-    note = models.Note(**payload.model_dump())
+    note_data = payload.model_dump()
+    note = models.Note(**note_data)
+    
+    # Set appropriate ForeignKey based on related_to field
+    if note.related_to == "client" and note.related_id:
+        note.client_id = note.related_id
+    elif note.related_to == "lead" and note.related_id:
+        note.lead_id = note.related_id
+    
     db.add(note)
     db.commit()
     db.refresh(note)
@@ -215,6 +241,16 @@ def create_note(db: Session, payload):
 def update_note(db: Session, note: models.Note, payload):
     for key, value in payload.model_dump(exclude_unset=True).items():
         setattr(note, key, value)
+    
+    # Update ForeignKey columns if related_to or related_id changed
+    if "related_to" in payload.model_dump() or "related_id" in payload.model_dump():
+        note.client_id = None
+        note.lead_id = None
+        if note.related_to == "client" and note.related_id:
+            note.client_id = note.related_id
+        elif note.related_to == "lead" and note.related_id:
+            note.lead_id = note.related_id
+    
     db.commit()
     db.refresh(note)
     return note
