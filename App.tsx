@@ -591,7 +591,7 @@ const App: React.FC = () => {
     }
   };
 
-  const updateNote = async (id: string, updates: Partial<Note>) => {
+  const updateNote = async (id: string, updates: Pick<Partial<Note>, 'content' | 'isPinned'>) => {
     try {
       const updated = await notesApi.update(id, updates, requireToken());
       setNotes(prev => prev.map(n => n.id === id ? updated : n));

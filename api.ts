@@ -309,10 +309,11 @@ const toApiNote = (note: Partial<Note>) => ({
 });
 
 export const notesApi = {
-  list: async (token: AuthToken, relatedTo?: string, relatedId?: string) => {
+  // List notes for a specific entity type. Both parameters are required to prevent fetching all notes.
+  list: async (token: AuthToken, relatedTo: string, relatedId?: string) => {
     let url = '/notes';
     const params = new URLSearchParams();
-    if (relatedTo) params.append('related_to', relatedTo);
+    params.append('related_to', relatedTo);
     if (relatedId) params.append('related_id', relatedId);
     if (params.toString()) url += `?${params.toString()}`;
     return (await request<any[]>(url, {}, token)).map(fromApiNote);
@@ -321,9 +322,13 @@ export const notesApi = {
     method: 'POST',
     body: JSON.stringify(toApiNote(note))
   }, token)),
-  update: async (id: string, note: Partial<Note>, token: AuthToken) => fromApiNote(await request(`/notes/${id}`, {
+  // Update only supports content and is_pinned fields (as per backend NoteUpdate schema)
+  update: async (id: string, updates: Pick<Partial<Note>, 'content' | 'isPinned'>, token: AuthToken) => fromApiNote(await request(`/notes/${id}`, {
     method: 'PATCH',
-    body: JSON.stringify({ content: note.content, is_pinned: note.isPinned })
+    body: JSON.stringify({
+      content: updates.content,
+      is_pinned: updates.isPinned
+    })
   }, token)),
   remove: (id: string, token: AuthToken) => request(`/notes/${id}`, { method: 'DELETE' }, token)
 };

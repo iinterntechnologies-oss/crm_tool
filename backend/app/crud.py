@@ -185,10 +185,16 @@ def delete_task(db: Session, task: models.Task):
 
 
 # Note CRUD
-def list_notes(db: Session, related_to: str = None, related_id: str = None):
+def list_notes(db: Session, related_to: str, related_id: str | None = None):
+    """List notes filtered by entity type. Requires related_to parameter for safety and performance.
+    
+    Args:
+        db: Database session
+        related_to: Entity type ('lead', 'client'). Required to prevent fetching all notes.
+        related_id: Optional specific entity ID to filter by
+    """
     query = db.query(models.Note).order_by(models.Note.is_pinned.desc(), models.Note.created_at.desc())
-    if related_to:
-        query = query.filter(models.Note.related_to == related_to)
+    query = query.filter(models.Note.related_to == related_to)
     if related_id:
         query = query.filter(models.Note.related_id == related_id)
     return query.all()

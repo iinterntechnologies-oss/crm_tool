@@ -8,8 +8,8 @@ router = APIRouter(prefix="/notes", tags=["notes"])
 
 @router.get("", response_model=list[schemas.NoteOut])
 def list_notes(
-    related_to: str | None = Query(None),
-    related_id: str | None = Query(None),
+    related_to: str = Query(..., description="Entity type: 'lead' or 'client'"),
+    related_id: str | None = Query(None, description="Optional: specific entity ID to filter by"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
