@@ -15,6 +15,12 @@ class ProjectStage(str, Enum):
     LAUNCHED = "Launched"
 
 
+class LeadStatus(str, Enum):
+    """Enum for lead status values"""
+    NEW = "new"
+    SAVED = "saved"
+
+
 def _uuid() -> str:
     return str(uuid.uuid4())
 
@@ -35,7 +41,7 @@ class Lead(Base):
     business_name: Mapped[str] = mapped_column(String(255))
     contact: Mapped[str] = mapped_column(String(255))
     comment: Mapped[str] = mapped_column(String(500), default="")
-    status: Mapped[str] = mapped_column(String(20), default="new")
+    status: Mapped[LeadStatus] = mapped_column(SQLEnum(LeadStatus), default=LeadStatus.NEW)
 
 
 class Client(Base):

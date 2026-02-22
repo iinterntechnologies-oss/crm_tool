@@ -26,7 +26,7 @@ import CustomersPage from './components/Customers';
 import CelebrationOverlay from './components/CelebrationOverlay';
 import Tasks from './components/Tasks';
 import Analytics from './components/Analytics';
-import { authApi, clientsApi, customersApi, goalsApi, leadsApi, tasksApi, notesApi } from './api';
+import { authApi, clientsApi, customersApi, goalsApi, leadsApi, tasksApi, notesApi, activitiesApi } from './api';
 
 /**
  * JWT Authentication Configuration
@@ -502,6 +502,16 @@ const App: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  // Activity handlers
+  const createActivity = async (activity: Omit<ActivityType, 'id' | 'createdAt'>) => {
+    try {
+      await activitiesApi.create(activity, requireToken());
+    } catch (error) {
+      console.warn('Failed to create activity log:', error);
+      // Don't throw - activity logging is non-critical
+    }
+  };
+
   // Task handlers
   const createTask = async (task: Omit<Task, 'id' | 'createdAt' | 'completedAt'>) => {
     try {
@@ -600,9 +610,9 @@ const App: React.FC = () => {
     }
   };
 
-  // Celebration Logic
+  // Celebration Logic - Triggers when successful revenue (completed customers) reaches goal target
   useEffect(() => {
-    if (goal && token && totalRevenue >= goal.targetAmount && !goal.isAchieved && goal.targetAmount > 0) {
+    if (goal && token && successfulRevenue >= goal.targetAmount && !goal.isAchieved && goal.targetAmount > 0) {
       setShowCelebration(true);
       const updatedGoal = { ...goal, isAchieved: true, dateAchieved: new Date().toISOString().split('T')[0] };
       setGoal(updatedGoal);
@@ -612,7 +622,7 @@ const App: React.FC = () => {
         });
       }
     }
-  }, [totalRevenue, goal, token, currentGoalId]);
+  }, [successfulRevenue, goal, token, currentGoalId]);
 
   const renderPage = () => {
     switch (currentPage) {

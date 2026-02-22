@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from pydantic import BaseModel, EmailStr, field_validator
-from .models import ProjectStage
+from .models import ProjectStage, LeadStatus
 
 
 class Token(BaseModel):
@@ -44,7 +44,7 @@ class LeadBase(BaseModel):
     business_name: str
     contact: str
     comment: str = ""
-    status: str = "new"
+    status: LeadStatus = LeadStatus.NEW
 
 
 class LeadCreate(LeadBase):
@@ -55,7 +55,7 @@ class LeadUpdate(BaseModel):
     business_name: str | None = None
     contact: str | None = None
     comment: str | None = None
-    status: str | None = None
+    status: LeadStatus | None = None
 
 
 class LeadOut(LeadBase):
