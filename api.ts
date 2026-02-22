@@ -11,13 +11,17 @@ const toApiLead = (lead: Partial<Lead>) => ({
   status: lead.status ?? 'new'
 });
 
-const fromApiLead = (lead: any): Lead => ({
-  id: lead.id,
-  businessName: lead.business_name,
-  contact: lead.contact,
-  comment: lead.comment ?? '',
-  status: lead.status
-});
+const fromApiLead = (lead: any): Lead => {
+  // Validate status - only allow 'new' or 'saved'
+  const status = (lead.status === 'saved' ? 'saved' : 'new') as 'new' | 'saved';
+  return {
+    id: lead.id,
+    businessName: lead.business_name,
+    contact: lead.contact,
+    comment: lead.comment ?? '',
+    status: status
+  };
+};
 
 const toApiClient = (client: Partial<Client>) => ({
   business_name: client.businessName,

@@ -1,6 +1,5 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { 
   LayoutDashboard, 
   Users, 
@@ -300,8 +299,7 @@ const App: React.FC = () => {
       const token = requireToken();
       const startDate = dates?.startDate || new Date().toISOString().split('T')[0];
       const finishDate = dates?.finishDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-      const newClient: Client = {
-        id: uuidv4(),
+      const newClient: Omit<Client, 'id'> = {
         businessName: lead.businessName,
         businessType: 'Web Design',
         contact: lead.contact,
@@ -332,16 +330,23 @@ const App: React.FC = () => {
       const serviceType = serviceTypeMap[newClient.businessType.toLowerCase().replace(/\s+/g, '_')] || 'default';
       
       // Generate onboarding tasks
+      let taskGenerationFailed = false;
       try {
         await tasksApi.generateOnboarding(createdClient.id, serviceType, token);
       } catch (taskError) {
         console.error('Failed to generate onboarding tasks:', taskError);
-        // Don't fail the entire conversion if task generation fails
+        taskGenerationFailed = true;
+        // Show warning to user but don't fail the entire conversion
+        setErrorMessage('⚠️ Client created but onboarding tasks failed to generate. Please add tasks manually.');
       }
       
       setSavedLeads(prev => prev.filter(l => l.id !== lead.id));
       setClients(prev => [...prev, createdClient]);
-      setErrorMessage('');
+      
+      // Only clear error if everything succeeded
+      if (!taskGenerationFailed) {
+        setErrorMessage('');
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to convert lead to client';
       if (message.toLowerCase().includes('lead not found')) {
