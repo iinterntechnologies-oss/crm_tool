@@ -316,8 +316,9 @@ const App: React.FC = () => {
         renewalDate: specs?.renewalDate || undefined
       };
       
-      await leadsApi.remove(lead.id, token);
+      // Create new client first, only delete the old lead if creation succeeds
       const createdClient = await clientsApi.create(newClient, token);
+      await leadsApi.remove(lead.id, token);
       
       // Map business type to service type for task templates
       const serviceTypeMap: { [key: string]: string } = {
@@ -387,12 +388,13 @@ const App: React.FC = () => {
       const token = requireToken();
       const client = clients.find(c => c.id === clientId);
       if (!client) return;
-      await clientsApi.remove(clientId, token);
+      // Create new customer record first, only delete the old client if creation succeeds
       const customer = await customersApi.create({
         businessName: client.businessName,
         completedDate: client.deadline || new Date().toISOString().split('T')[0],
         totalPaid: client.paymentCollected
       }, token);
+      await clientsApi.remove(clientId, token);
       setClients(prev => prev.filter(c => c.id !== clientId));
       setCustomers(prev => [customer, ...prev]);
       setErrorMessage('');
